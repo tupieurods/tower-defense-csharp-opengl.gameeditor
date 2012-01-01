@@ -1,0 +1,9 @@
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Release\GameEditor.exe
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Release\GameEditor.pdb
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GameEditor.MainForm.resources
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GameEditor.Properties.Resources.resources
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GenerateResource.write.1.tlog
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GameEditor.exe
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Release\GameEditor.pdb
