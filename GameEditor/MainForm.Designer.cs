@@ -33,36 +33,38 @@
       this.PMapPictBox = new System.Windows.Forms.Panel();
       this.PBMap = new System.Windows.Forms.PictureBox();
       this.BSelectMap = new System.Windows.Forms.Button();
-      this.GPMapManage = new System.Windows.Forms.GroupBox();
+      this.GBMapManage = new System.Windows.Forms.GroupBox();
       this.BNewGameConfig = new System.Windows.Forms.Button();
       this.BSave = new System.Windows.Forms.Button();
       this.BLoad = new System.Windows.Forms.Button();
       this.GBLevelConfig = new System.Windows.Forms.GroupBox();
-      this.BAddLevel = new System.Windows.Forms.Button();
+      this.nUDGoldForKill = new System.Windows.Forms.NumericUpDown();
+      this.mTBGoldForKill = new System.Windows.Forms.MaskedTextBox();
+      this.mTBHealthPoints = new System.Windows.Forms.MaskedTextBox();
       this.BRemoveLevel = new System.Windows.Forms.Button();
-      this.LCountLevel = new System.Windows.Forms.Label();
-      this.LTowerPath = new System.Windows.Forms.Label();
-      this.TBTowerFolder = new System.Windows.Forms.TextBox();
+      this.LGoldForKill = new System.Windows.Forms.Label();
+      this.BAddLevel = new System.Windows.Forms.Button();
+      this.LMovingSpeed = new System.Windows.Forms.Label();
+      this.LHealtPoints = new System.Windows.Forms.Label();
+      this.BLoadMonsterPict = new System.Windows.Forms.Button();
+      this.mTBNumberOfPhases = new System.Windows.Forms.MaskedTextBox();
+      this.LBDirectionSelect = new System.Windows.Forms.ListBox();
+      this.LMonsterSelect = new System.Windows.Forms.Label();
+      this.LNumberOfPhases = new System.Windows.Forms.Label();
       this.PMonsterPict = new System.Windows.Forms.Panel();
       this.PBMosterPict = new System.Windows.Forms.PictureBox();
-      this.LNumberOfPhases = new System.Windows.Forms.Label();
-      this.LMonsterSelect = new System.Windows.Forms.Label();
-      this.LBDirectionSelect = new System.Windows.Forms.ListBox();
-      this.mTBPhaseNumber = new System.Windows.Forms.MaskedTextBox();
-      this.BLoadMonsterPict = new System.Windows.Forms.Button();
-      this.LHealtPoints = new System.Windows.Forms.Label();
-      this.LMovingSpeed = new System.Windows.Forms.Label();
-      this.LGoldForKill = new System.Windows.Forms.Label();
-      this.mTBHealthPoints = new System.Windows.Forms.MaskedTextBox();
-      this.mTBGoldForKill = new System.Windows.Forms.MaskedTextBox();
-      this.nUDGoldForKill = new System.Windows.Forms.NumericUpDown();
+      this.LCurrentNCountLevel = new System.Windows.Forms.Label();
+      this.LTowerPath = new System.Windows.Forms.Label();
+      this.TBTowerFolder = new System.Windows.Forms.TextBox();
+      this.BNextLevel = new System.Windows.Forms.Button();
+      this.BPrevLevel = new System.Windows.Forms.Button();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
-      this.GPMapManage.SuspendLayout();
+      this.GBMapManage.SuspendLayout();
       this.GBLevelConfig.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).BeginInit();
       this.PMonsterPict.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).BeginInit();
       this.SuspendLayout();
       // 
       // ODForFileSelect
@@ -104,19 +106,20 @@
       this.BSelectMap.TabIndex = 5;
       this.BSelectMap.Text = "Set map";
       this.BSelectMap.UseVisualStyleBackColor = true;
+      this.BSelectMap.Click += new System.EventHandler(this.BSelectMap_Click);
       // 
-      // GPMapManage
+      // GBMapManage
       // 
-      this.GPMapManage.Controls.Add(this.BSelectMap);
-      this.GPMapManage.Controls.Add(this.PMapPictBox);
-      this.GPMapManage.Controls.Add(this.LMapPath);
-      this.GPMapManage.Enabled = false;
-      this.GPMapManage.Location = new System.Drawing.Point(555, 12);
-      this.GPMapManage.Name = "GPMapManage";
-      this.GPMapManage.Size = new System.Drawing.Size(603, 234);
-      this.GPMapManage.TabIndex = 6;
-      this.GPMapManage.TabStop = false;
-      this.GPMapManage.Text = "Map manage";
+      this.GBMapManage.Controls.Add(this.BSelectMap);
+      this.GBMapManage.Controls.Add(this.PMapPictBox);
+      this.GBMapManage.Controls.Add(this.LMapPath);
+      this.GBMapManage.Enabled = false;
+      this.GBMapManage.Location = new System.Drawing.Point(555, 12);
+      this.GBMapManage.Name = "GBMapManage";
+      this.GBMapManage.Size = new System.Drawing.Size(603, 234);
+      this.GBMapManage.TabIndex = 6;
+      this.GBMapManage.TabStop = false;
+      this.GBMapManage.Text = "Map manage";
       // 
       // BNewGameConfig
       // 
@@ -124,8 +127,10 @@
       this.BNewGameConfig.Name = "BNewGameConfig";
       this.BNewGameConfig.Size = new System.Drawing.Size(231, 33);
       this.BNewGameConfig.TabIndex = 7;
+      this.BNewGameConfig.Tag = "0";
       this.BNewGameConfig.Text = "New game configuration";
       this.BNewGameConfig.UseVisualStyleBackColor = true;
+      this.BNewGameConfig.Click += new System.EventHandler(this.BNewGameConfig_Click);
       // 
       // BSave
       // 
@@ -135,6 +140,7 @@
       this.BSave.TabIndex = 8;
       this.BSave.Text = "Save";
       this.BSave.UseVisualStyleBackColor = true;
+      this.BSave.Click += new System.EventHandler(this.BSave_Click);
       // 
       // BLoad
       // 
@@ -147,6 +153,8 @@
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.BPrevLevel);
+      this.GBLevelConfig.Controls.Add(this.BNextLevel);
       this.GBLevelConfig.Controls.Add(this.nUDGoldForKill);
       this.GBLevelConfig.Controls.Add(this.mTBGoldForKill);
       this.GBLevelConfig.Controls.Add(this.mTBHealthPoints);
@@ -156,7 +164,7 @@
       this.GBLevelConfig.Controls.Add(this.LMovingSpeed);
       this.GBLevelConfig.Controls.Add(this.LHealtPoints);
       this.GBLevelConfig.Controls.Add(this.BLoadMonsterPict);
-      this.GBLevelConfig.Controls.Add(this.mTBPhaseNumber);
+      this.GBLevelConfig.Controls.Add(this.mTBNumberOfPhases);
       this.GBLevelConfig.Controls.Add(this.LBDirectionSelect);
       this.GBLevelConfig.Controls.Add(this.LMonsterSelect);
       this.GBLevelConfig.Controls.Add(this.LNumberOfPhases);
@@ -168,163 +176,6 @@
       this.GBLevelConfig.TabIndex = 10;
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
-      // 
-      // BAddLevel
-      // 
-      this.BAddLevel.Enabled = false;
-      this.BAddLevel.Location = new System.Drawing.Point(10, 28);
-      this.BAddLevel.Name = "BAddLevel";
-      this.BAddLevel.Size = new System.Drawing.Size(136, 32);
-      this.BAddLevel.TabIndex = 11;
-      this.BAddLevel.Text = "Add level";
-      this.BAddLevel.UseVisualStyleBackColor = true;
-      // 
-      // BRemoveLevel
-      // 
-      this.BRemoveLevel.Enabled = false;
-      this.BRemoveLevel.Location = new System.Drawing.Point(163, 28);
-      this.BRemoveLevel.Name = "BRemoveLevel";
-      this.BRemoveLevel.Size = new System.Drawing.Size(136, 32);
-      this.BRemoveLevel.TabIndex = 12;
-      this.BRemoveLevel.Text = "Remove level";
-      this.BRemoveLevel.UseVisualStyleBackColor = true;
-      // 
-      // LCountLevel
-      // 
-      this.LCountLevel.AutoSize = true;
-      this.LCountLevel.Location = new System.Drawing.Point(12, 61);
-      this.LCountLevel.Name = "LCountLevel";
-      this.LCountLevel.Size = new System.Drawing.Size(157, 24);
-      this.LCountLevel.TabIndex = 13;
-      this.LCountLevel.Text = "Number of levels:";
-      // 
-      // LTowerPath
-      // 
-      this.LTowerPath.AutoSize = true;
-      this.LTowerPath.Location = new System.Drawing.Point(12, 89);
-      this.LTowerPath.Name = "LTowerPath";
-      this.LTowerPath.Size = new System.Drawing.Size(306, 24);
-      this.LTowerPath.TabIndex = 14;
-      this.LTowerPath.Text = "Name of towers configuration folder";
-      // 
-      // TBTowerFolder
-      // 
-      this.TBTowerFolder.Location = new System.Drawing.Point(324, 89);
-      this.TBTowerFolder.MaxLength = 200;
-      this.TBTowerFolder.Name = "TBTowerFolder";
-      this.TBTowerFolder.Size = new System.Drawing.Size(225, 29);
-      this.TBTowerFolder.TabIndex = 15;
-      // 
-      // PMonsterPict
-      // 
-      this.PMonsterPict.AutoScroll = true;
-      this.PMonsterPict.Controls.Add(this.PBMosterPict);
-      this.PMonsterPict.Location = new System.Drawing.Point(607, 25);
-      this.PMonsterPict.Name = "PMonsterPict";
-      this.PMonsterPict.Size = new System.Drawing.Size(260, 260);
-      this.PMonsterPict.TabIndex = 0;
-      // 
-      // PBMosterPict
-      // 
-      this.PBMosterPict.Location = new System.Drawing.Point(3, 3);
-      this.PBMosterPict.Name = "PBMosterPict";
-      this.PBMosterPict.Size = new System.Drawing.Size(254, 254);
-      this.PBMosterPict.TabIndex = 0;
-      this.PBMosterPict.TabStop = false;
-      // 
-      // LNumberOfPhases
-      // 
-      this.LNumberOfPhases.AutoSize = true;
-      this.LNumberOfPhases.Location = new System.Drawing.Point(372, 32);
-      this.LNumberOfPhases.Name = "LNumberOfPhases";
-      this.LNumberOfPhases.Size = new System.Drawing.Size(232, 24);
-      this.LNumberOfPhases.TabIndex = 2;
-      this.LNumberOfPhases.Text = "Number of moving phases";
-      // 
-      // LMonsterSelect
-      // 
-      this.LMonsterSelect.AutoSize = true;
-      this.LMonsterSelect.Location = new System.Drawing.Point(387, 125);
-      this.LMonsterSelect.Name = "LMonsterSelect";
-      this.LMonsterSelect.Size = new System.Drawing.Size(217, 24);
-      this.LMonsterSelect.TabIndex = 4;
-      this.LMonsterSelect.Text = "Select monster direction:";
-      // 
-      // LBDirectionSelect
-      // 
-      this.LBDirectionSelect.FormattingEnabled = true;
-      this.LBDirectionSelect.ItemHeight = 24;
-      this.LBDirectionSelect.Items.AddRange(new object[] {
-            "Right",
-            "Left",
-            "Up",
-            "Down"});
-      this.LBDirectionSelect.Location = new System.Drawing.Point(481, 152);
-      this.LBDirectionSelect.Name = "LBDirectionSelect";
-      this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
-      this.LBDirectionSelect.TabIndex = 5;
-      // 
-      // mTBPhaseNumber
-      // 
-      this.mTBPhaseNumber.Location = new System.Drawing.Point(504, 63);
-      this.mTBPhaseNumber.Mask = "00000";
-      this.mTBPhaseNumber.Name = "mTBPhaseNumber";
-      this.mTBPhaseNumber.Size = new System.Drawing.Size(100, 29);
-      this.mTBPhaseNumber.TabIndex = 6;
-      this.mTBPhaseNumber.ValidatingType = typeof(int);
-      // 
-      // BLoadMonsterPict
-      // 
-      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 258);
-      this.BLoadMonsterPict.Name = "BLoadMonsterPict";
-      this.BLoadMonsterPict.Size = new System.Drawing.Size(220, 30);
-      this.BLoadMonsterPict.TabIndex = 7;
-      this.BLoadMonsterPict.Text = "Load monster picture";
-      this.BLoadMonsterPict.UseVisualStyleBackColor = true;
-      // 
-      // LHealtPoints
-      // 
-      this.LHealtPoints.AutoSize = true;
-      this.LHealtPoints.Location = new System.Drawing.Point(6, 77);
-      this.LHealtPoints.Name = "LHealtPoints";
-      this.LHealtPoints.Size = new System.Drawing.Size(113, 24);
-      this.LHealtPoints.TabIndex = 8;
-      this.LHealtPoints.Text = "Healt points:";
-      // 
-      // LMovingSpeed
-      // 
-      this.LMovingSpeed.AutoSize = true;
-      this.LMovingSpeed.Location = new System.Drawing.Point(6, 101);
-      this.LMovingSpeed.Name = "LMovingSpeed";
-      this.LMovingSpeed.Size = new System.Drawing.Size(303, 24);
-      this.LMovingSpeed.TabIndex = 9;
-      this.LMovingSpeed.Text = "MovingSpeed(pixel per game tick):";
-      // 
-      // LGoldForKill
-      // 
-      this.LGoldForKill.AutoSize = true;
-      this.LGoldForKill.Location = new System.Drawing.Point(6, 141);
-      this.LGoldForKill.Name = "LGoldForKill";
-      this.LGoldForKill.Size = new System.Drawing.Size(133, 24);
-      this.LGoldForKill.TabIndex = 10;
-      this.LGoldForKill.Text = "Gold for killing:";
-      // 
-      // mTBHealthPoints
-      // 
-      this.mTBHealthPoints.Location = new System.Drawing.Point(125, 74);
-      this.mTBHealthPoints.Mask = "000000";
-      this.mTBHealthPoints.Name = "mTBHealthPoints";
-      this.mTBHealthPoints.Size = new System.Drawing.Size(100, 29);
-      this.mTBHealthPoints.TabIndex = 11;
-      // 
-      // mTBGoldForKill
-      // 
-      this.mTBGoldForKill.Location = new System.Drawing.Point(145, 138);
-      this.mTBGoldForKill.Mask = "00000";
-      this.mTBGoldForKill.Name = "mTBGoldForKill";
-      this.mTBGoldForKill.Size = new System.Drawing.Size(100, 29);
-      this.mTBGoldForKill.TabIndex = 13;
-      this.mTBGoldForKill.ValidatingType = typeof(int);
       // 
       // nUDGoldForKill
       // 
@@ -348,6 +199,183 @@
             0,
             0});
       // 
+      // mTBGoldForKill
+      // 
+      this.mTBGoldForKill.Location = new System.Drawing.Point(145, 138);
+      this.mTBGoldForKill.Mask = "00000";
+      this.mTBGoldForKill.Name = "mTBGoldForKill";
+      this.mTBGoldForKill.Size = new System.Drawing.Size(100, 29);
+      this.mTBGoldForKill.TabIndex = 13;
+      this.mTBGoldForKill.Text = "10";
+      this.mTBGoldForKill.ValidatingType = typeof(int);
+      // 
+      // mTBHealthPoints
+      // 
+      this.mTBHealthPoints.Location = new System.Drawing.Point(125, 74);
+      this.mTBHealthPoints.Mask = "000000";
+      this.mTBHealthPoints.Name = "mTBHealthPoints";
+      this.mTBHealthPoints.Size = new System.Drawing.Size(100, 29);
+      this.mTBHealthPoints.TabIndex = 11;
+      this.mTBHealthPoints.Text = "100";
+      // 
+      // BRemoveLevel
+      // 
+      this.BRemoveLevel.Location = new System.Drawing.Point(163, 28);
+      this.BRemoveLevel.Name = "BRemoveLevel";
+      this.BRemoveLevel.Size = new System.Drawing.Size(136, 32);
+      this.BRemoveLevel.TabIndex = 12;
+      this.BRemoveLevel.Text = "Remove level";
+      this.BRemoveLevel.UseVisualStyleBackColor = true;
+      // 
+      // LGoldForKill
+      // 
+      this.LGoldForKill.AutoSize = true;
+      this.LGoldForKill.Location = new System.Drawing.Point(6, 141);
+      this.LGoldForKill.Name = "LGoldForKill";
+      this.LGoldForKill.Size = new System.Drawing.Size(133, 24);
+      this.LGoldForKill.TabIndex = 10;
+      this.LGoldForKill.Text = "Gold for killing:";
+      // 
+      // BAddLevel
+      // 
+      this.BAddLevel.Location = new System.Drawing.Point(10, 28);
+      this.BAddLevel.Name = "BAddLevel";
+      this.BAddLevel.Size = new System.Drawing.Size(136, 32);
+      this.BAddLevel.TabIndex = 11;
+      this.BAddLevel.Text = "Add level";
+      this.BAddLevel.UseVisualStyleBackColor = true;
+      // 
+      // LMovingSpeed
+      // 
+      this.LMovingSpeed.AutoSize = true;
+      this.LMovingSpeed.Location = new System.Drawing.Point(6, 101);
+      this.LMovingSpeed.Name = "LMovingSpeed";
+      this.LMovingSpeed.Size = new System.Drawing.Size(303, 24);
+      this.LMovingSpeed.TabIndex = 9;
+      this.LMovingSpeed.Text = "MovingSpeed(pixel per game tick):";
+      // 
+      // LHealtPoints
+      // 
+      this.LHealtPoints.AutoSize = true;
+      this.LHealtPoints.Location = new System.Drawing.Point(6, 77);
+      this.LHealtPoints.Name = "LHealtPoints";
+      this.LHealtPoints.Size = new System.Drawing.Size(113, 24);
+      this.LHealtPoints.TabIndex = 8;
+      this.LHealtPoints.Text = "Healt points:";
+      // 
+      // BLoadMonsterPict
+      // 
+      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 258);
+      this.BLoadMonsterPict.Name = "BLoadMonsterPict";
+      this.BLoadMonsterPict.Size = new System.Drawing.Size(220, 30);
+      this.BLoadMonsterPict.TabIndex = 7;
+      this.BLoadMonsterPict.Text = "Load monster picture";
+      this.BLoadMonsterPict.UseVisualStyleBackColor = true;
+      // 
+      // mTBNumberOfPhases
+      // 
+      this.mTBNumberOfPhases.Location = new System.Drawing.Point(504, 63);
+      this.mTBNumberOfPhases.Mask = "00000";
+      this.mTBNumberOfPhases.Name = "mTBNumberOfPhases";
+      this.mTBNumberOfPhases.Size = new System.Drawing.Size(100, 29);
+      this.mTBNumberOfPhases.TabIndex = 6;
+      this.mTBNumberOfPhases.Text = "1";
+      this.mTBNumberOfPhases.ValidatingType = typeof(int);
+      // 
+      // LBDirectionSelect
+      // 
+      this.LBDirectionSelect.FormattingEnabled = true;
+      this.LBDirectionSelect.ItemHeight = 24;
+      this.LBDirectionSelect.Items.AddRange(new object[] {
+            "Right",
+            "Left",
+            "Up",
+            "Down"});
+      this.LBDirectionSelect.Location = new System.Drawing.Point(481, 152);
+      this.LBDirectionSelect.Name = "LBDirectionSelect";
+      this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
+      this.LBDirectionSelect.TabIndex = 5;
+      // 
+      // LMonsterSelect
+      // 
+      this.LMonsterSelect.AutoSize = true;
+      this.LMonsterSelect.Location = new System.Drawing.Point(387, 125);
+      this.LMonsterSelect.Name = "LMonsterSelect";
+      this.LMonsterSelect.Size = new System.Drawing.Size(217, 24);
+      this.LMonsterSelect.TabIndex = 4;
+      this.LMonsterSelect.Text = "Select monster direction:";
+      // 
+      // LNumberOfPhases
+      // 
+      this.LNumberOfPhases.AutoSize = true;
+      this.LNumberOfPhases.Location = new System.Drawing.Point(372, 32);
+      this.LNumberOfPhases.Name = "LNumberOfPhases";
+      this.LNumberOfPhases.Size = new System.Drawing.Size(232, 24);
+      this.LNumberOfPhases.TabIndex = 2;
+      this.LNumberOfPhases.Text = "Number of moving phases";
+      // 
+      // PMonsterPict
+      // 
+      this.PMonsterPict.AutoScroll = true;
+      this.PMonsterPict.Controls.Add(this.PBMosterPict);
+      this.PMonsterPict.Location = new System.Drawing.Point(607, 25);
+      this.PMonsterPict.Name = "PMonsterPict";
+      this.PMonsterPict.Size = new System.Drawing.Size(260, 260);
+      this.PMonsterPict.TabIndex = 0;
+      // 
+      // PBMosterPict
+      // 
+      this.PBMosterPict.Location = new System.Drawing.Point(3, 3);
+      this.PBMosterPict.Name = "PBMosterPict";
+      this.PBMosterPict.Size = new System.Drawing.Size(254, 254);
+      this.PBMosterPict.TabIndex = 0;
+      this.PBMosterPict.TabStop = false;
+      // 
+      // LCurrentNCountLevel
+      // 
+      this.LCurrentNCountLevel.AutoSize = true;
+      this.LCurrentNCountLevel.Location = new System.Drawing.Point(21, 224);
+      this.LCurrentNCountLevel.Name = "LCurrentNCountLevel";
+      this.LCurrentNCountLevel.Size = new System.Drawing.Size(90, 24);
+      this.LCurrentNCountLevel.TabIndex = 13;
+      this.LCurrentNCountLevel.Text = "Level: 1/1";
+      // 
+      // LTowerPath
+      // 
+      this.LTowerPath.AutoSize = true;
+      this.LTowerPath.Location = new System.Drawing.Point(12, 200);
+      this.LTowerPath.Name = "LTowerPath";
+      this.LTowerPath.Size = new System.Drawing.Size(306, 24);
+      this.LTowerPath.TabIndex = 14;
+      this.LTowerPath.Text = "Name of towers configuration folder";
+      // 
+      // TBTowerFolder
+      // 
+      this.TBTowerFolder.Location = new System.Drawing.Point(324, 195);
+      this.TBTowerFolder.MaxLength = 200;
+      this.TBTowerFolder.Name = "TBTowerFolder";
+      this.TBTowerFolder.Size = new System.Drawing.Size(225, 29);
+      this.TBTowerFolder.TabIndex = 15;
+      this.TBTowerFolder.Text = "Demo";
+      // 
+      // BNextLevel
+      // 
+      this.BNextLevel.Location = new System.Drawing.Point(244, 258);
+      this.BNextLevel.Name = "BNextLevel";
+      this.BNextLevel.Size = new System.Drawing.Size(120, 30);
+      this.BNextLevel.TabIndex = 15;
+      this.BNextLevel.Text = "Next level";
+      this.BNextLevel.UseVisualStyleBackColor = true;
+      // 
+      // BPrevLevel
+      // 
+      this.BPrevLevel.Location = new System.Drawing.Point(102, 258);
+      this.BPrevLevel.Name = "BPrevLevel";
+      this.BPrevLevel.Size = new System.Drawing.Size(136, 30);
+      this.BPrevLevel.TabIndex = 16;
+      this.BPrevLevel.Text = "Previous level";
+      this.BPrevLevel.UseVisualStyleBackColor = true;
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -355,12 +383,12 @@
       this.ClientSize = new System.Drawing.Size(1174, 557);
       this.Controls.Add(this.TBTowerFolder);
       this.Controls.Add(this.LTowerPath);
-      this.Controls.Add(this.LCountLevel);
+      this.Controls.Add(this.LCurrentNCountLevel);
       this.Controls.Add(this.GBLevelConfig);
       this.Controls.Add(this.BLoad);
       this.Controls.Add(this.BSave);
       this.Controls.Add(this.BNewGameConfig);
-      this.Controls.Add(this.GPMapManage);
+      this.Controls.Add(this.GBMapManage);
       this.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.Margin = new System.Windows.Forms.Padding(6);
       this.MaximizeBox = false;
@@ -369,13 +397,13 @@
       this.Text = "GameEditor";
       this.PMapPictBox.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).EndInit();
-      this.GPMapManage.ResumeLayout(false);
-      this.GPMapManage.PerformLayout();
+      this.GBMapManage.ResumeLayout(false);
+      this.GBMapManage.PerformLayout();
       this.GBLevelConfig.ResumeLayout(false);
       this.GBLevelConfig.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).EndInit();
       this.PMonsterPict.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -388,14 +416,14 @@
     private System.Windows.Forms.Panel PMapPictBox;
     private System.Windows.Forms.PictureBox PBMap;
     private System.Windows.Forms.Button BSelectMap;
-    private System.Windows.Forms.GroupBox GPMapManage;
+    private System.Windows.Forms.GroupBox GBMapManage;
     private System.Windows.Forms.Button BNewGameConfig;
     private System.Windows.Forms.Button BSave;
     private System.Windows.Forms.Button BLoad;
     private System.Windows.Forms.GroupBox GBLevelConfig;
     private System.Windows.Forms.Button BAddLevel;
     private System.Windows.Forms.Button BRemoveLevel;
-    private System.Windows.Forms.Label LCountLevel;
+    private System.Windows.Forms.Label LCurrentNCountLevel;
     private System.Windows.Forms.Label LTowerPath;
     private System.Windows.Forms.TextBox TBTowerFolder;
     private System.Windows.Forms.Panel PMonsterPict;
@@ -403,7 +431,7 @@
     private System.Windows.Forms.Label LMonsterSelect;
     private System.Windows.Forms.Label LNumberOfPhases;
     private System.Windows.Forms.ListBox LBDirectionSelect;
-    private System.Windows.Forms.MaskedTextBox mTBPhaseNumber;
+    private System.Windows.Forms.MaskedTextBox mTBNumberOfPhases;
     private System.Windows.Forms.Button BLoadMonsterPict;
     private System.Windows.Forms.Label LGoldForKill;
     private System.Windows.Forms.Label LMovingSpeed;
@@ -411,6 +439,8 @@
     private System.Windows.Forms.MaskedTextBox mTBGoldForKill;
     private System.Windows.Forms.MaskedTextBox mTBHealthPoints;
     private System.Windows.Forms.NumericUpDown nUDGoldForKill;
+    private System.Windows.Forms.Button BPrevLevel;
+    private System.Windows.Forms.Button BNextLevel;
   }
 }
 
