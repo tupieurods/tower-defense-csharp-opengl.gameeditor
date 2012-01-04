@@ -38,7 +38,9 @@
       this.BSave = new System.Windows.Forms.Button();
       this.BLoad = new System.Windows.Forms.Button();
       this.GBLevelConfig = new System.Windows.Forms.GroupBox();
-      this.nUDGoldForKill = new System.Windows.Forms.NumericUpDown();
+      this.BPrevLevel = new System.Windows.Forms.Button();
+      this.BNextLevel = new System.Windows.Forms.Button();
+      this.nUDCanvaSpeed = new System.Windows.Forms.NumericUpDown();
       this.mTBGoldForKill = new System.Windows.Forms.MaskedTextBox();
       this.mTBHealthPoints = new System.Windows.Forms.MaskedTextBox();
       this.BRemoveLevel = new System.Windows.Forms.Button();
@@ -56,13 +58,11 @@
       this.LCurrentNCountLevel = new System.Windows.Forms.Label();
       this.LTowerPath = new System.Windows.Forms.Label();
       this.TBTowerFolder = new System.Windows.Forms.TextBox();
-      this.BNextLevel = new System.Windows.Forms.Button();
-      this.BPrevLevel = new System.Windows.Forms.Button();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
       this.GBMapManage.SuspendLayout();
       this.GBLevelConfig.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.nUDCanvaSpeed)).BeginInit();
       this.PMonsterPict.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).BeginInit();
       this.SuspendLayout();
@@ -155,7 +155,7 @@
       // 
       this.GBLevelConfig.Controls.Add(this.BPrevLevel);
       this.GBLevelConfig.Controls.Add(this.BNextLevel);
-      this.GBLevelConfig.Controls.Add(this.nUDGoldForKill);
+      this.GBLevelConfig.Controls.Add(this.nUDCanvaSpeed);
       this.GBLevelConfig.Controls.Add(this.mTBGoldForKill);
       this.GBLevelConfig.Controls.Add(this.mTBHealthPoints);
       this.GBLevelConfig.Controls.Add(this.BRemoveLevel);
@@ -177,27 +177,50 @@
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
       // 
-      // nUDGoldForKill
+      // BPrevLevel
       // 
-      this.nUDGoldForKill.Location = new System.Drawing.Point(315, 96);
-      this.nUDGoldForKill.Maximum = new decimal(new int[] {
+      this.BPrevLevel.Enabled = false;
+      this.BPrevLevel.Location = new System.Drawing.Point(102, 258);
+      this.BPrevLevel.Name = "BPrevLevel";
+      this.BPrevLevel.Size = new System.Drawing.Size(136, 30);
+      this.BPrevLevel.TabIndex = 16;
+      this.BPrevLevel.Text = "Previous level";
+      this.BPrevLevel.UseVisualStyleBackColor = true;
+      this.BPrevLevel.Click += new System.EventHandler(this.BPrevLevel_Click);
+      // 
+      // BNextLevel
+      // 
+      this.BNextLevel.Enabled = false;
+      this.BNextLevel.Location = new System.Drawing.Point(244, 258);
+      this.BNextLevel.Name = "BNextLevel";
+      this.BNextLevel.Size = new System.Drawing.Size(120, 30);
+      this.BNextLevel.TabIndex = 15;
+      this.BNextLevel.Text = "Next level";
+      this.BNextLevel.UseVisualStyleBackColor = true;
+      this.BNextLevel.Click += new System.EventHandler(this.BNextLevel_Click);
+      // 
+      // nUDCanvaSpeed
+      // 
+      this.nUDCanvaSpeed.Location = new System.Drawing.Point(315, 96);
+      this.nUDCanvaSpeed.Maximum = new decimal(new int[] {
             8,
             0,
             0,
             0});
-      this.nUDGoldForKill.Minimum = new decimal(new int[] {
+      this.nUDCanvaSpeed.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-      this.nUDGoldForKill.Name = "nUDGoldForKill";
-      this.nUDGoldForKill.Size = new System.Drawing.Size(82, 29);
-      this.nUDGoldForKill.TabIndex = 14;
-      this.nUDGoldForKill.Value = new decimal(new int[] {
+      this.nUDCanvaSpeed.Name = "nUDCanvaSpeed";
+      this.nUDCanvaSpeed.Size = new System.Drawing.Size(82, 29);
+      this.nUDCanvaSpeed.TabIndex = 14;
+      this.nUDCanvaSpeed.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
+      this.nUDCanvaSpeed.Validated += new System.EventHandler(this.nUDCanvaSpeed_Validated);
       // 
       // mTBGoldForKill
       // 
@@ -208,6 +231,7 @@
       this.mTBGoldForKill.TabIndex = 13;
       this.mTBGoldForKill.Text = "10";
       this.mTBGoldForKill.ValidatingType = typeof(int);
+      this.mTBGoldForKill.TextChanged += new System.EventHandler(this.mTBGoldForKill_TextChanged);
       // 
       // mTBHealthPoints
       // 
@@ -217,15 +241,18 @@
       this.mTBHealthPoints.Size = new System.Drawing.Size(100, 29);
       this.mTBHealthPoints.TabIndex = 11;
       this.mTBHealthPoints.Text = "100";
+      this.mTBHealthPoints.TextChanged += new System.EventHandler(this.mTBHealthPoints_TextChanged);
       // 
       // BRemoveLevel
       // 
+      this.BRemoveLevel.Enabled = false;
       this.BRemoveLevel.Location = new System.Drawing.Point(163, 28);
       this.BRemoveLevel.Name = "BRemoveLevel";
       this.BRemoveLevel.Size = new System.Drawing.Size(136, 32);
       this.BRemoveLevel.TabIndex = 12;
       this.BRemoveLevel.Text = "Remove level";
       this.BRemoveLevel.UseVisualStyleBackColor = true;
+      this.BRemoveLevel.Click += new System.EventHandler(this.BRemoveLevel_Click);
       // 
       // LGoldForKill
       // 
@@ -244,6 +271,7 @@
       this.BAddLevel.TabIndex = 11;
       this.BAddLevel.Text = "Add level";
       this.BAddLevel.UseVisualStyleBackColor = true;
+      this.BAddLevel.Click += new System.EventHandler(this.BAddLevel_Click);
       // 
       // LMovingSpeed
       // 
@@ -265,6 +293,7 @@
       // 
       // BLoadMonsterPict
       // 
+      this.BLoadMonsterPict.Enabled = false;
       this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 258);
       this.BLoadMonsterPict.Name = "BLoadMonsterPict";
       this.BLoadMonsterPict.Size = new System.Drawing.Size(220, 30);
@@ -281,16 +310,17 @@
       this.mTBNumberOfPhases.TabIndex = 6;
       this.mTBNumberOfPhases.Text = "1";
       this.mTBNumberOfPhases.ValidatingType = typeof(int);
+      this.mTBNumberOfPhases.TextChanged += new System.EventHandler(this.mTBNumberOfPhases_TextChanged);
       // 
       // LBDirectionSelect
       // 
       this.LBDirectionSelect.FormattingEnabled = true;
       this.LBDirectionSelect.ItemHeight = 24;
       this.LBDirectionSelect.Items.AddRange(new object[] {
-            "Right",
-            "Left",
             "Up",
-            "Down"});
+            "Right",
+            "Down",
+            "Left"});
       this.LBDirectionSelect.Location = new System.Drawing.Point(481, 152);
       this.LBDirectionSelect.Name = "LBDirectionSelect";
       this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
@@ -338,7 +368,7 @@
       this.LCurrentNCountLevel.Name = "LCurrentNCountLevel";
       this.LCurrentNCountLevel.Size = new System.Drawing.Size(90, 24);
       this.LCurrentNCountLevel.TabIndex = 13;
-      this.LCurrentNCountLevel.Text = "Level: 1/1";
+      this.LCurrentNCountLevel.Text = "Level: 0/0";
       // 
       // LTowerPath
       // 
@@ -357,24 +387,6 @@
       this.TBTowerFolder.Size = new System.Drawing.Size(225, 29);
       this.TBTowerFolder.TabIndex = 15;
       this.TBTowerFolder.Text = "Demo";
-      // 
-      // BNextLevel
-      // 
-      this.BNextLevel.Location = new System.Drawing.Point(244, 258);
-      this.BNextLevel.Name = "BNextLevel";
-      this.BNextLevel.Size = new System.Drawing.Size(120, 30);
-      this.BNextLevel.TabIndex = 15;
-      this.BNextLevel.Text = "Next level";
-      this.BNextLevel.UseVisualStyleBackColor = true;
-      // 
-      // BPrevLevel
-      // 
-      this.BPrevLevel.Location = new System.Drawing.Point(102, 258);
-      this.BPrevLevel.Name = "BPrevLevel";
-      this.BPrevLevel.Size = new System.Drawing.Size(136, 30);
-      this.BPrevLevel.TabIndex = 16;
-      this.BPrevLevel.Text = "Previous level";
-      this.BPrevLevel.UseVisualStyleBackColor = true;
       // 
       // MainForm
       // 
@@ -401,7 +413,7 @@
       this.GBMapManage.PerformLayout();
       this.GBLevelConfig.ResumeLayout(false);
       this.GBLevelConfig.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.nUDGoldForKill)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.nUDCanvaSpeed)).EndInit();
       this.PMonsterPict.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).EndInit();
       this.ResumeLayout(false);
@@ -438,7 +450,7 @@
     private System.Windows.Forms.Label LHealtPoints;
     private System.Windows.Forms.MaskedTextBox mTBGoldForKill;
     private System.Windows.Forms.MaskedTextBox mTBHealthPoints;
-    private System.Windows.Forms.NumericUpDown nUDGoldForKill;
+    private System.Windows.Forms.NumericUpDown nUDCanvaSpeed;
     private System.Windows.Forms.Button BPrevLevel;
     private System.Windows.Forms.Button BNextLevel;
   }
