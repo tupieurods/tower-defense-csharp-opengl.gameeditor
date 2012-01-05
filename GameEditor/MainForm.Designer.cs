@@ -172,7 +172,7 @@
       this.GBLevelConfig.Enabled = false;
       this.GBLevelConfig.Location = new System.Drawing.Point(25, 251);
       this.GBLevelConfig.Name = "GBLevelConfig";
-      this.GBLevelConfig.Size = new System.Drawing.Size(873, 294);
+      this.GBLevelConfig.Size = new System.Drawing.Size(834, 294);
       this.GBLevelConfig.TabIndex = 10;
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
@@ -300,6 +300,7 @@
       this.BLoadMonsterPict.TabIndex = 7;
       this.BLoadMonsterPict.Text = "Load monster picture";
       this.BLoadMonsterPict.UseVisualStyleBackColor = true;
+      this.BLoadMonsterPict.Click += new System.EventHandler(this.BLoadMonsterPict_Click);
       // 
       // mTBNumberOfPhases
       // 
@@ -308,7 +309,7 @@
       this.mTBNumberOfPhases.Name = "mTBNumberOfPhases";
       this.mTBNumberOfPhases.Size = new System.Drawing.Size(100, 29);
       this.mTBNumberOfPhases.TabIndex = 6;
-      this.mTBNumberOfPhases.Text = "1";
+      this.mTBNumberOfPhases.Text = "2";
       this.mTBNumberOfPhases.ValidatingType = typeof(int);
       this.mTBNumberOfPhases.TextChanged += new System.EventHandler(this.mTBNumberOfPhases_TextChanged);
       // 
@@ -325,6 +326,7 @@
       this.LBDirectionSelect.Name = "LBDirectionSelect";
       this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
       this.LBDirectionSelect.TabIndex = 5;
+      this.LBDirectionSelect.SelectedIndexChanged += new System.EventHandler(this.LBDirectionSelect_SelectedIndexChanged);
       // 
       // LMonsterSelect
       // 
@@ -350,14 +352,14 @@
       this.PMonsterPict.Controls.Add(this.PBMosterPict);
       this.PMonsterPict.Location = new System.Drawing.Point(607, 25);
       this.PMonsterPict.Name = "PMonsterPict";
-      this.PMonsterPict.Size = new System.Drawing.Size(260, 260);
+      this.PMonsterPict.Size = new System.Drawing.Size(217, 260);
       this.PMonsterPict.TabIndex = 0;
       // 
       // PBMosterPict
       // 
       this.PBMosterPict.Location = new System.Drawing.Point(3, 3);
       this.PBMosterPict.Name = "PBMosterPict";
-      this.PBMosterPict.Size = new System.Drawing.Size(254, 254);
+      this.PBMosterPict.Size = new System.Drawing.Size(210, 254);
       this.PBMosterPict.TabIndex = 0;
       this.PBMosterPict.TabStop = false;
       // 

@@ -34,7 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GameCoClassLiblary">
+    <Reference Include="GameCoClassLiblary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Dll сборка\GameCoClassLiblary\bin\Release\GameCoClassLiblary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
