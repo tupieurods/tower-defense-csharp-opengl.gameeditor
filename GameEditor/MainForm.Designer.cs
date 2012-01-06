@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.ODForFileSelect = new System.Windows.Forms.OpenFileDialog();
-      this.LMapPath = new System.Windows.Forms.Label();
+      this.LMapName = new System.Windows.Forms.Label();
       this.PMapPictBox = new System.Windows.Forms.Panel();
       this.PBMap = new System.Windows.Forms.PictureBox();
       this.BSelectMap = new System.Windows.Forms.Button();
@@ -38,6 +38,8 @@
       this.BSave = new System.Windows.Forms.Button();
       this.BLoad = new System.Windows.Forms.Button();
       this.GBLevelConfig = new System.Windows.Forms.GroupBox();
+      this.mTBArmor = new System.Windows.Forms.MaskedTextBox();
+      this.LArmor = new System.Windows.Forms.Label();
       this.BPrevLevel = new System.Windows.Forms.Button();
       this.BNextLevel = new System.Windows.Forms.Button();
       this.nUDCanvaSpeed = new System.Windows.Forms.NumericUpDown();
@@ -58,6 +60,7 @@
       this.LCurrentNCountLevel = new System.Windows.Forms.Label();
       this.LTowerPath = new System.Windows.Forms.Label();
       this.TBTowerFolder = new System.Windows.Forms.TextBox();
+      this.SDForSaveConfiguration = new System.Windows.Forms.SaveFileDialog();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
       this.GBMapManage.SuspendLayout();
@@ -72,14 +75,14 @@
       this.ODForFileSelect.FileName = "*.*";
       this.ODForFileSelect.Filter = "Все файлы|*.*";
       // 
-      // LMapPath
+      // LMapName
       // 
-      this.LMapPath.AutoSize = true;
-      this.LMapPath.Location = new System.Drawing.Point(6, 25);
-      this.LMapPath.Name = "LMapPath";
-      this.LMapPath.Size = new System.Drawing.Size(142, 24);
-      this.LMapPath.TabIndex = 0;
-      this.LMapPath.Text = "Path to map file:";
+      this.LMapName.AutoSize = true;
+      this.LMapName.Location = new System.Drawing.Point(6, 25);
+      this.LMapName.Name = "LMapName";
+      this.LMapName.Size = new System.Drawing.Size(108, 24);
+      this.LMapName.TabIndex = 0;
+      this.LMapName.Text = "Map Name:";
       // 
       // PMapPictBox
       // 
@@ -112,7 +115,7 @@
       // 
       this.GBMapManage.Controls.Add(this.BSelectMap);
       this.GBMapManage.Controls.Add(this.PMapPictBox);
-      this.GBMapManage.Controls.Add(this.LMapPath);
+      this.GBMapManage.Controls.Add(this.LMapName);
       this.GBMapManage.Enabled = false;
       this.GBMapManage.Location = new System.Drawing.Point(555, 12);
       this.GBMapManage.Name = "GBMapManage";
@@ -134,7 +137,8 @@
       // 
       // BSave
       // 
-      this.BSave.Location = new System.Drawing.Point(249, 12);
+      this.BSave.Enabled = false;
+      this.BSave.Location = new System.Drawing.Point(330, 12);
       this.BSave.Name = "BSave";
       this.BSave.Size = new System.Drawing.Size(75, 33);
       this.BSave.TabIndex = 8;
@@ -144,15 +148,18 @@
       // 
       // BLoad
       // 
-      this.BLoad.Location = new System.Drawing.Point(330, 12);
+      this.BLoad.Location = new System.Drawing.Point(249, 12);
       this.BLoad.Name = "BLoad";
       this.BLoad.Size = new System.Drawing.Size(75, 33);
       this.BLoad.TabIndex = 9;
       this.BLoad.Text = "Load";
       this.BLoad.UseVisualStyleBackColor = true;
+      this.BLoad.Click += new System.EventHandler(this.BLoad_Click);
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.mTBArmor);
+      this.GBLevelConfig.Controls.Add(this.LArmor);
       this.GBLevelConfig.Controls.Add(this.BPrevLevel);
       this.GBLevelConfig.Controls.Add(this.BNextLevel);
       this.GBLevelConfig.Controls.Add(this.nUDCanvaSpeed);
@@ -176,6 +183,25 @@
       this.GBLevelConfig.TabIndex = 10;
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
+      // 
+      // mTBArmor
+      // 
+      this.mTBArmor.Location = new System.Drawing.Point(74, 171);
+      this.mTBArmor.Mask = "000000";
+      this.mTBArmor.Name = "mTBArmor";
+      this.mTBArmor.Size = new System.Drawing.Size(100, 29);
+      this.mTBArmor.TabIndex = 18;
+      this.mTBArmor.Text = "1";
+      this.mTBArmor.TextChanged += new System.EventHandler(this.mTBArmor_TextChanged);
+      // 
+      // LArmor
+      // 
+      this.LArmor.AutoSize = true;
+      this.LArmor.Location = new System.Drawing.Point(6, 174);
+      this.LArmor.Name = "LArmor";
+      this.LArmor.Size = new System.Drawing.Size(62, 24);
+      this.LArmor.TabIndex = 17;
+      this.LArmor.Text = "Armor";
       // 
       // BPrevLevel
       // 
@@ -389,6 +415,12 @@
       this.TBTowerFolder.Size = new System.Drawing.Size(225, 29);
       this.TBTowerFolder.TabIndex = 15;
       this.TBTowerFolder.Text = "Demo";
+      this.TBTowerFolder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TBTowerFolder_KeyPress);
+      // 
+      // SDForSaveConfiguration
+      // 
+      this.SDForSaveConfiguration.FileName = "*.tdgc";
+      this.SDForSaveConfiguration.Filter = "Файлы конфигруации игры|*.tdgc";
       // 
       // MainForm
       // 
@@ -426,7 +458,7 @@
     #endregion
 
     private System.Windows.Forms.OpenFileDialog ODForFileSelect;
-    private System.Windows.Forms.Label LMapPath;
+    private System.Windows.Forms.Label LMapName;
     private System.Windows.Forms.Panel PMapPictBox;
     private System.Windows.Forms.PictureBox PBMap;
     private System.Windows.Forms.Button BSelectMap;
@@ -455,6 +487,9 @@
     private System.Windows.Forms.NumericUpDown nUDCanvaSpeed;
     private System.Windows.Forms.Button BPrevLevel;
     private System.Windows.Forms.Button BNextLevel;
+    private System.Windows.Forms.MaskedTextBox mTBArmor;
+    private System.Windows.Forms.Label LArmor;
+    private System.Windows.Forms.SaveFileDialog SDForSaveConfiguration;
   }
 }
 
