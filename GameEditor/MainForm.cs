@@ -15,29 +15,58 @@ namespace GameEditor
 {
   public partial class MainForm : Form
   {
-    private List<MonsterParam> LevelsConfig;
-    private int CurrentLevel = 0;
+    private List<MonsterParam> LevelsConfig;//конфигурация всех уровней
+    private int CurrentLevel = 0;//показывает текущий уровень
+    private bool RealChange = true;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
+    //человеком или программно
 
     public MainForm()
     {
       InitializeComponent();
-      //CurrentLevel = 0;
       LevelsConfig = new List<MonsterParam>();
     }
 
+    #region Установление новых настроек по умолчанию для нового уровня/игровой конфигурации
     private void DefualtForNewLevel()//Заполнение параметров при добавлении уровня
     {
-      mTBGoldForKill.Text = "1";
+      RealChange = false;
+      mTBGoldForKill.Text = "10";
       mTBHealthPoints.Text = "100";
-      mTBNumberOfPhases.Text = "2";
+      mTBNumberOfPhases.Text = "1";
       nUDCanvaSpeed.Value = 1;
       PBMosterPict.Image = null;
+      RealChange = true;
     }
+
+    private void SetDefault()//Default для новой конфигурации уровня
+    {
+      DefualtForNewLevel();//Для нового уровня
+      TBTowerFolder.Text = "Demo";
+      LevelsConfig = new List<MonsterParam>();
+    }
+
+    private void CreateNewConfiguration()
+    {
+      BNewGameConfig.Tag = 1;
+      GBLevelConfig.Enabled = true;
+      GBMapManage.Enabled = true;
+      BNextLevel.Enabled = false;
+      BPrevLevel.Enabled = false;
+      BRemoveLevel.Enabled = false;
+      CurrentLevel = 0;
+      LCurrentNCountLevel.Text = "Level: 0/0";
+      PBMap.Image = null;
+      PBMap.Size = new Size(10, 10);
+      SetDefault();
+      BSave.Enabled = true;
+    }
+    #endregion
 
     private void ShowLevelSettings(int LevelNum)//Показ состояния настроек уровня
     {
       if (LevelsConfig.Count < LevelNum)
         return;
+      RealChange = false;
       mTBGoldForKill.Text = LevelsConfig[LevelNum - 1].GoldForKill.ToString();
       mTBHealthPoints.Text = LevelsConfig[LevelNum - 1].HealthPoints.ToString();
       mTBNumberOfPhases.Text = LevelsConfig[LevelNum - 1].NumberOfPhases.ToString();
@@ -45,37 +74,43 @@ namespace GameEditor
       mTBArmor.Text = LevelsConfig[LevelNum - 1].Armor.ToString();
       LCurrentNCountLevel.Text = "Level: " + LevelNum.ToString() + "/" + LevelsConfig.Count.ToString();
       //Вывод картинки
-    }
-
-    private void SetDefault()//Default для нового уровня
-    {
-      DefualtForNewLevel();
-      TBTowerFolder.Text = "Demo";
-      LevelsConfig = new List<MonsterParam>();
+      MonsterParam Tmp=LevelsConfig[LevelNum-1];
+      if (Tmp[0, 0] != null)
+        DrawMonsterPhases(3);
+      else
+      {
+        PBMosterPict.Image = null;
+        PBMosterPict.Size = new Size(210, 254);
+      }
+      RealChange = true;
     }
 
     private void BNewGameConfig_Click(object sender, EventArgs e)//Создание новой игры
     {
       if (Convert.ToInt32(BNewGameConfig.Tag) == 0)
       {
-        BNewGameConfig.Tag = 1;
-        GBLevelConfig.Enabled = true;
-        GBMapManage.Enabled = true;
-        SetDefault();
-        BSave.Enabled = true;
+        CreateNewConfiguration();
         return;
       }
       if (Convert.ToInt32(BNewGameConfig.Tag) == 1)
       {
         if (MessageBox.Show("Game configuration not saved! Save game configuration?", "Game configurator", MessageBoxButtons.YesNo) == DialogResult.Yes)
+          //Ещё не сохраняли после изменений
+        {//Если хотим сохранять сохраняем
+          BSave_Click(sender, e);
+          return;
+        }
+        else//Если не сохраняем, то сразу создаём
         {
+          CreateNewConfiguration();
           return;
         }
       }
-      if (Convert.ToInt32(BNewGameConfig.Tag) == 2)
+      if (Convert.ToInt32(BNewGameConfig.Tag) == 2)//Если конфигурация сохранена, но это как защита от случайного нажатия
       {
         if (MessageBox.Show("Do you really want create new game configuration?", "Game configurator", MessageBoxButtons.YesNo) == DialogResult.Yes)
         {
+          CreateNewConfiguration();
           return;
         }
       }
@@ -123,8 +158,14 @@ namespace GameEditor
     private void BLoad_Click(object sender, EventArgs e)
     {
       ODForFileSelect.Filter = "Файл с конфигурацией игры|*.tdgc";
+      ODForFileSelect.FileName = "*.tdgc";
       if (ODForFileSelect.ShowDialog() == DialogResult.OK)
       {
+        if (ODForFileSelect.FileName.LastIndexOf(".tdgc") == -1)
+        {
+          MessageBox.Show("Wrong file selected");
+          return;
+        }
         int LevelsCount;
         try
         {
@@ -149,9 +190,14 @@ namespace GameEditor
           LevelsConfig.Clear();
           for (int i = 0; i < LevelsCount; i++)
             LevelsConfig.Add((MonsterParam)(Formatter.Deserialize(LevelLoadStream)));
+          LevelLoadStream.Close();
           CurrentLevel = 1;
           ShowLevelSettings(1);
-          LevelLoadStream.Close();
+          BRemoveLevel.Enabled = true;
+          if (LevelsConfig.Count() > 1)
+          {
+            BLoadMonsterPict.Enabled = true;
+          }
         }
         catch (Exception exc)
         {
@@ -159,7 +205,7 @@ namespace GameEditor
           return;
         }
       }
-      BNewGameConfig.Tag = 1;
+      BNewGameConfig.Tag = 2;
       GBLevelConfig.Enabled = true;
       GBMapManage.Enabled = true;
       if (LevelsConfig.Count > 1)
@@ -171,6 +217,7 @@ namespace GameEditor
     }
     #endregion
 
+    #region Загрузка и показ изображения карты
     private void BSelectMap_Click(object sender, EventArgs e)//Выбор карты
     {
       ODForFileSelect.Filter = "Файл с конфигурацией карты|*.efm";
@@ -179,6 +226,7 @@ namespace GameEditor
         if (ShowMapByFileName(ODForFileSelect.FileName))
         {
           PBMap.Tag = ODForFileSelect.FileName;
+          BNewGameConfig.Tag = 1;
           /* Для чего задаётся полный путь к файлу.
           * Для удобства разработчика. При запуске игры, а не конфигуратора, 
           * будет извлечено имя карты и она будет загружена из каталога data,
@@ -192,6 +240,8 @@ namespace GameEditor
     {
       try
       {
+        if (FileName == string.Empty)
+          return false;
         TMap Map = new TMap(FileName);
         Bitmap TmpImg = new Bitmap(Map.Width * 15, Map.Height * 15);
         Graphics Canva = Graphics.FromImage(TmpImg);//создали канву
@@ -208,6 +258,7 @@ namespace GameEditor
       MessageBox.Show("Map loaded Successful");
       return true;
     }
+    #endregion
 
     #region Добавление и удаление уровней
     private void BAddLevel_Click(object sender, EventArgs e)//Добавление уровня
@@ -229,11 +280,13 @@ namespace GameEditor
       }
       DefualtForNewLevel();//установить шаблон
       BRemoveLevel.Enabled = true;
+      BNewGameConfig.Tag = 1;
     }
 
     private void BRemoveLevel_Click(object sender, EventArgs e)//Удаление уровня
     {
       LevelsConfig.RemoveAt(CurrentLevel - 1);
+      BNewGameConfig.Tag = 1;
       if (LevelsConfig.Count == 0)//Если число уровней равно нулю
       {
         BLoadMonsterPict.Enabled = false;
@@ -289,6 +342,8 @@ namespace GameEditor
       Tmp.HealthPoints = Convert.ToInt32(mTBHealthPoints.Text.Replace(" ", string.Empty)) == 0 ?
         100 : Convert.ToInt32(mTBHealthPoints.Text.Replace(" ", string.Empty));
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
     }
 
     private void mTBGoldForKill_TextChanged(object sender, EventArgs e)
@@ -299,6 +354,8 @@ namespace GameEditor
       Tmp.GoldForKill = Convert.ToInt32(mTBGoldForKill.Text.Replace(" ", string.Empty)) == 0 ?
         10 : Convert.ToInt32(mTBGoldForKill.Text.Replace(" ", string.Empty));
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
     }
 
     private void mTBNumberOfPhases_TextChanged(object sender, EventArgs e)
@@ -309,6 +366,12 @@ namespace GameEditor
       Tmp.NumberOfPhases = Convert.ToInt32(mTBNumberOfPhases.Text.Replace(" ", string.Empty)) == 0 ?
         1 : Convert.ToInt32(mTBNumberOfPhases.Text.Replace(" ", string.Empty));
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
+      if (Tmp[0, 0] != null)
+      {
+        DrawMonsterPhases(3);
+      }
     }
 
     private void mTBArmor_TextChanged(object sender, EventArgs e)
@@ -319,6 +382,8 @@ namespace GameEditor
       Tmp.Armor = Convert.ToInt32(mTBArmor.Text.Replace(" ", string.Empty)) == 0 ?
         1 : Convert.ToInt32(mTBArmor.Text.Replace(" ", string.Empty));
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
     }
 
     private void nUDCanvaSpeed_Validated(object sender, EventArgs e)
@@ -328,12 +393,17 @@ namespace GameEditor
       var Tmp = LevelsConfig[CurrentLevel - 1];
       Tmp.CanvasSpeed = Convert.ToInt32(nUDCanvaSpeed.Value);
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
     }
     #endregion
 
+    #region Загрузка/Отрисовка изображения монстра
     private void DrawMonsterPhases(int Direction)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+      if (Tmp[0,0]==null)
+        return;
       Bitmap TmpForDrawing;
       TmpForDrawing = new Bitmap(PBMosterPict.Width, (Tmp[Direction, 0].Height * Tmp.NumberOfPhases) + ((20 * Tmp.NumberOfPhases) - 1));
       PBMosterPict.Height = TmpForDrawing.Height;
@@ -365,6 +435,8 @@ namespace GameEditor
           return;
         }
         MessageBox.Show("Bitmap loaded Successful");
+        if (RealChange)
+          BNewGameConfig.Tag = 1;
       }
     }
 
@@ -376,12 +448,16 @@ namespace GameEditor
         DrawMonsterPhases(LBDirectionSelect.SelectedIndex);
       }
     }
+    #endregion
 
     private void TBTowerFolder_KeyPress(object sender, KeyPressEventArgs e)//Чтобы невозможно было символ в имени папки, который запрещён в windows
     {
       string BadSymbols = "\\|/:*?\"<>|";
       if (BadSymbols.IndexOf(e.KeyChar.ToString()) != -1)
         e.Handled = true;
+      else
+        if (RealChange)
+          BNewGameConfig.Tag = 1;
     }
 
   }

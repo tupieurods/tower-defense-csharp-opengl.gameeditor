@@ -335,7 +335,7 @@
       this.mTBNumberOfPhases.Name = "mTBNumberOfPhases";
       this.mTBNumberOfPhases.Size = new System.Drawing.Size(100, 29);
       this.mTBNumberOfPhases.TabIndex = 6;
-      this.mTBNumberOfPhases.Text = "2";
+      this.mTBNumberOfPhases.Text = "1";
       this.mTBNumberOfPhases.ValidatingType = typeof(int);
       this.mTBNumberOfPhases.TextChanged += new System.EventHandler(this.mTBNumberOfPhases_TextChanged);
       // 
