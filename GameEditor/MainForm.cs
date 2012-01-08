@@ -15,7 +15,8 @@ namespace GameEditor
 {
   public partial class MainForm : Form
   {
-    private List<MonsterParam> LevelsConfig;//конфигурация всех уровней
+    private List<MonsterParam> LevelsConfig;//конфигурация монстров на уровнях
+    private List<int> NumberOfMonstersAtLevel;//Число монстров на каждлм из уровней
     private int CurrentLevel = 0;//показывает текущий уровень
     private bool RealChange = true;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
     //человеком или программно
@@ -24,6 +25,7 @@ namespace GameEditor
     {
       InitializeComponent();
       LevelsConfig = new List<MonsterParam>();
+      NumberOfMonstersAtLevel = new List<int>();
     }
 
     #region Установление новых настроек по умолчанию для нового уровня/игровой конфигурации
@@ -33,6 +35,7 @@ namespace GameEditor
       mTBGoldForKill.Text = "10";
       mTBHealthPoints.Text = "100";
       mTBNumberOfPhases.Text = "1";
+      mTBNumberOfMonstersAtLevel.Text = "20";
       nUDCanvaSpeed.Value = 1;
       PBMosterPict.Image = null;
       RealChange = true;
@@ -43,6 +46,7 @@ namespace GameEditor
       DefualtForNewLevel();//Для нового уровня
       TBTowerFolder.Text = "Demo";
       LevelsConfig = new List<MonsterParam>();
+      NumberOfMonstersAtLevel = new List<int>();
     }
 
     private void CreateNewConfiguration()
@@ -72,9 +76,10 @@ namespace GameEditor
       mTBNumberOfPhases.Text = LevelsConfig[LevelNum - 1].NumberOfPhases.ToString();
       nUDCanvaSpeed.Value = LevelsConfig[LevelNum - 1].CanvasSpeed;
       mTBArmor.Text = LevelsConfig[LevelNum - 1].Armor.ToString();
+      mTBNumberOfMonstersAtLevel.Text = NumberOfMonstersAtLevel[LevelNum - 1].ToString();
       LCurrentNCountLevel.Text = "Level: " + LevelNum.ToString() + "/" + LevelsConfig.Count.ToString();
       //Вывод картинки
-      MonsterParam Tmp=LevelsConfig[LevelNum-1];
+      MonsterParam Tmp = LevelsConfig[LevelNum - 1];
       if (Tmp[0, 0] != null)
         DrawMonsterPhases(3);
       else
@@ -95,7 +100,7 @@ namespace GameEditor
       if (Convert.ToInt32(BNewGameConfig.Tag) == 1)
       {
         if (MessageBox.Show("Game configuration not saved! Save game configuration?", "Game configurator", MessageBoxButtons.YesNo) == DialogResult.Yes)
-          //Ещё не сохраняли после изменений
+        //Ещё не сохраняли после изменений
         {//Если хотим сохранять сохраняем
           BSave_Click(sender, e);
           return;
@@ -127,7 +132,12 @@ namespace GameEditor
           SaveMainConf.Write(Convert.ToString(PBMap.Tag));
           SaveMainConf.Write(TBTowerFolder.Text);
           SaveMainConf.Write(LevelsConfig.Count);
-          SaveMainConf.Write(0);//Запись числа опций, если в будущем опции появятся, то они должны будут быть записаны далее
+          SaveMainConf.Write(1);//Запись числа опций, если в будущем опции появятся, то они должны будут быть записаны далее
+          SaveMainConf.Write(1);//Тип опции 1-число монстров на каждом уровне
+          foreach (int CountMonsters in NumberOfMonstersAtLevel)
+          {
+            SaveMainConf.Write(CountMonsters);
+          }
           SaveMainConf.Close();
         }
         catch (Exception exc)
@@ -175,6 +185,27 @@ namespace GameEditor
           TBTowerFolder.Text = LoadMainConf.ReadString();
           LevelsCount = LoadMainConf.ReadInt32();
           //Считываем число опций и читаем сами опции, в текущей версии 0 опций
+          int NumberOfOptions = LoadMainConf.ReadInt32();
+          for (int i = 0; i < NumberOfOptions; i++)
+          {
+            int OptionNumber = LoadMainConf.ReadInt32();
+            switch (OptionNumber)
+            {
+              case 1:
+                NumberOfMonstersAtLevel.Clear();
+                NumberOfMonstersAtLevel = new List<int>();
+                for (int j = 0; j < LevelsCount; j++)
+                {
+                  NumberOfMonstersAtLevel.Add(LoadMainConf.ReadInt32());
+                }
+                break;
+            }
+          }
+          if (NumberOfMonstersAtLevel.Count()<LevelsCount)
+          {
+            for (int i = NumberOfMonstersAtLevel.Count(); i < LevelsCount; i++)
+              NumberOfMonstersAtLevel.Add(20);
+          }
           LoadMainConf.Close();
         }
         catch (Exception exc)
@@ -266,6 +297,7 @@ namespace GameEditor
       MonsterParam tmp = new MonsterParam(1, 100, 1, 10, 1, "");
       //LevelsConfig.Add(tmp);//Добавили шаблон нового уровня в конец
       LevelsConfig.Insert(CurrentLevel++, tmp);
+      NumberOfMonstersAtLevel.Insert(CurrentLevel - 1, 20);
       //CurrentLevel = LevelsConfig.Count;//установили созданный уровень текущим
       //LCurrentNCountLevel.Text = "Level " + CurrentLevel.ToString() + "/" + CurrentLevel.ToString();
       LCurrentNCountLevel.Text = "Level: " + CurrentLevel.ToString() + "/" + LevelsConfig.Count.ToString();
@@ -286,6 +318,7 @@ namespace GameEditor
     private void BRemoveLevel_Click(object sender, EventArgs e)//Удаление уровня
     {
       LevelsConfig.RemoveAt(CurrentLevel - 1);
+      NumberOfMonstersAtLevel.RemoveAt(CurrentLevel - 1);
       BNewGameConfig.Tag = 1;
       if (LevelsConfig.Count == 0)//Если число уровней равно нулю
       {
@@ -396,13 +429,23 @@ namespace GameEditor
       if (RealChange)
         BNewGameConfig.Tag = 1;
     }
+
+    private void mTBNumberOfMonstersAtLevel_TextChanged(object sender, EventArgs e)
+    {
+      if ((CurrentLevel <= 0) || (mTBNumberOfMonstersAtLevel.Text == string.Empty))
+        return;
+      NumberOfMonstersAtLevel[CurrentLevel - 1] = Convert.ToInt32(mTBNumberOfMonstersAtLevel.Text) == 0 ?
+        20 : Convert.ToInt32(mTBNumberOfMonstersAtLevel.Text.Replace(" ", string.Empty));
+      if (RealChange)
+        BNewGameConfig.Tag = 1;
+    }
     #endregion
 
     #region Загрузка/Отрисовка изображения монстра
     private void DrawMonsterPhases(int Direction)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
-      if (Tmp[0,0]==null)
+      if (Tmp[0, 0] == null)
         return;
       Bitmap TmpForDrawing;
       TmpForDrawing = new Bitmap(PBMosterPict.Width, (Tmp[Direction, 0].Height * Tmp.NumberOfPhases) + ((20 * Tmp.NumberOfPhases) - 1));

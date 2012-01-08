@@ -61,6 +61,8 @@
       this.LTowerPath = new System.Windows.Forms.Label();
       this.TBTowerFolder = new System.Windows.Forms.TextBox();
       this.SDForSaveConfiguration = new System.Windows.Forms.SaveFileDialog();
+      this.mTBNumberOfMonstersAtLevel = new System.Windows.Forms.MaskedTextBox();
+      this.LNumberOfMonstersAtLvl = new System.Windows.Forms.Label();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
       this.GBMapManage.SuspendLayout();
@@ -158,6 +160,8 @@
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.LNumberOfMonstersAtLvl);
+      this.GBLevelConfig.Controls.Add(this.mTBNumberOfMonstersAtLevel);
       this.GBLevelConfig.Controls.Add(this.mTBArmor);
       this.GBLevelConfig.Controls.Add(this.LArmor);
       this.GBLevelConfig.Controls.Add(this.BPrevLevel);
@@ -422,6 +426,24 @@
       this.SDForSaveConfiguration.FileName = "*.tdgc";
       this.SDForSaveConfiguration.Filter = "Файлы конфигруации игры|*.tdgc";
       // 
+      // mTBNumberOfMonstersAtLevel
+      // 
+      this.mTBNumberOfMonstersAtLevel.Location = new System.Drawing.Point(261, 212);
+      this.mTBNumberOfMonstersAtLevel.Mask = "0000";
+      this.mTBNumberOfMonstersAtLevel.Name = "mTBNumberOfMonstersAtLevel";
+      this.mTBNumberOfMonstersAtLevel.Size = new System.Drawing.Size(100, 29);
+      this.mTBNumberOfMonstersAtLevel.TabIndex = 19;
+      this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.mTBNumberOfMonstersAtLevel_TextChanged);
+      // 
+      // LNumberOfMonstersAtLvl
+      // 
+      this.LNumberOfMonstersAtLvl.AutoSize = true;
+      this.LNumberOfMonstersAtLvl.Location = new System.Drawing.Point(6, 215);
+      this.LNumberOfMonstersAtLvl.Name = "LNumberOfMonstersAtLvl";
+      this.LNumberOfMonstersAtLvl.Size = new System.Drawing.Size(249, 24);
+      this.LNumberOfMonstersAtLvl.TabIndex = 20;
+      this.LNumberOfMonstersAtLvl.Text = "Number of monsters at level:";
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -490,6 +512,8 @@
     private System.Windows.Forms.MaskedTextBox mTBArmor;
     private System.Windows.Forms.Label LArmor;
     private System.Windows.Forms.SaveFileDialog SDForSaveConfiguration;
+    private System.Windows.Forms.Label LNumberOfMonstersAtLvl;
+    private System.Windows.Forms.MaskedTextBox mTBNumberOfMonstersAtLevel;
   }
 }
 
