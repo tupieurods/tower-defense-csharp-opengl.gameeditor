@@ -81,7 +81,7 @@ namespace GameEditor
       //Вывод картинки
       MonsterParam Tmp = LevelsConfig[LevelNum - 1];
       if (Tmp[0, 0] != null)
-        DrawMonsterPhases(3);
+        DrawMonsterPhases(MonsterDirection.Left);
       else
       {
         PBMosterPict.Image = null;
@@ -403,7 +403,7 @@ namespace GameEditor
         BNewGameConfig.Tag = 1;
       if (Tmp[0, 0] != null)
       {
-        DrawMonsterPhases(3);
+        DrawMonsterPhases(MonsterDirection.Left);
       }
     }
 
@@ -442,7 +442,7 @@ namespace GameEditor
     #endregion
 
     #region Загрузка/Отрисовка изображения монстра
-    private void DrawMonsterPhases(int Direction)
+    private void DrawMonsterPhases(MonsterDirection Direction)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
       if (Tmp[0, 0] == null)
@@ -470,7 +470,7 @@ namespace GameEditor
           var Tmp = LevelsConfig[CurrentLevel - 1];
           Tmp.SetMonsterPict = ODForFileSelect.FileName;
           LevelsConfig[CurrentLevel - 1] = Tmp;
-          DrawMonsterPhases(3);
+          DrawMonsterPhases(MonsterDirection.Left);
         }
         catch
         {
@@ -488,7 +488,7 @@ namespace GameEditor
       var Tmp = LevelsConfig[CurrentLevel - 1];
       if (Tmp[0, 0] != null)
       {
-        DrawMonsterPhases(LBDirectionSelect.SelectedIndex);
+        DrawMonsterPhases((MonsterDirection)LBDirectionSelect.SelectedIndex);
       }
     }
     #endregion
