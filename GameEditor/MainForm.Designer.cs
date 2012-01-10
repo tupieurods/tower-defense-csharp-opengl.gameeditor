@@ -38,6 +38,12 @@
       this.BSave = new System.Windows.Forms.Button();
       this.BLoad = new System.Windows.Forms.Button();
       this.GBLevelConfig = new System.Windows.Forms.GroupBox();
+      this.GBNumberOfDirections = new System.Windows.Forms.GroupBox();
+      this.RBAllFourDirections = new System.Windows.Forms.RadioButton();
+      this.RBLetfAndUpDirections = new System.Windows.Forms.RadioButton();
+      this.RBLeftDirection = new System.Windows.Forms.RadioButton();
+      this.LNumberOfMonstersAtLvl = new System.Windows.Forms.Label();
+      this.mTBNumberOfMonstersAtLevel = new System.Windows.Forms.MaskedTextBox();
       this.mTBArmor = new System.Windows.Forms.MaskedTextBox();
       this.LArmor = new System.Windows.Forms.Label();
       this.BPrevLevel = new System.Windows.Forms.Button();
@@ -61,12 +67,11 @@
       this.LTowerPath = new System.Windows.Forms.Label();
       this.TBTowerFolder = new System.Windows.Forms.TextBox();
       this.SDForSaveConfiguration = new System.Windows.Forms.SaveFileDialog();
-      this.mTBNumberOfMonstersAtLevel = new System.Windows.Forms.MaskedTextBox();
-      this.LNumberOfMonstersAtLvl = new System.Windows.Forms.Label();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
       this.GBMapManage.SuspendLayout();
       this.GBLevelConfig.SuspendLayout();
+      this.GBNumberOfDirections.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.nUDCanvaSpeed)).BeginInit();
       this.PMonsterPict.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).BeginInit();
@@ -82,9 +87,9 @@
       this.LMapName.AutoSize = true;
       this.LMapName.Location = new System.Drawing.Point(6, 25);
       this.LMapName.Name = "LMapName";
-      this.LMapName.Size = new System.Drawing.Size(108, 24);
+      this.LMapName.Size = new System.Drawing.Size(105, 24);
       this.LMapName.TabIndex = 0;
-      this.LMapName.Text = "Map Name:";
+      this.LMapName.Text = "Map name:";
       // 
       // PMapPictBox
       // 
@@ -160,6 +165,7 @@
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.GBNumberOfDirections);
       this.GBLevelConfig.Controls.Add(this.LNumberOfMonstersAtLvl);
       this.GBLevelConfig.Controls.Add(this.mTBNumberOfMonstersAtLevel);
       this.GBLevelConfig.Controls.Add(this.mTBArmor);
@@ -183,10 +189,76 @@
       this.GBLevelConfig.Enabled = false;
       this.GBLevelConfig.Location = new System.Drawing.Point(25, 251);
       this.GBLevelConfig.Name = "GBLevelConfig";
-      this.GBLevelConfig.Size = new System.Drawing.Size(834, 294);
+      this.GBLevelConfig.Size = new System.Drawing.Size(1127, 294);
       this.GBLevelConfig.TabIndex = 10;
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
+      // 
+      // GBNumberOfDirections
+      // 
+      this.GBNumberOfDirections.Controls.Add(this.RBAllFourDirections);
+      this.GBNumberOfDirections.Controls.Add(this.RBLetfAndUpDirections);
+      this.GBNumberOfDirections.Controls.Add(this.RBLeftDirection);
+      this.GBNumberOfDirections.Enabled = false;
+      this.GBNumberOfDirections.Location = new System.Drawing.Point(830, 32);
+      this.GBNumberOfDirections.Name = "GBNumberOfDirections";
+      this.GBNumberOfDirections.Size = new System.Drawing.Size(291, 168);
+      this.GBNumberOfDirections.TabIndex = 21;
+      this.GBNumberOfDirections.TabStop = false;
+      this.GBNumberOfDirections.Text = "Number of directions in bitmap file";
+      // 
+      // RBAllFourDirections
+      // 
+      this.RBAllFourDirections.AutoSize = true;
+      this.RBAllFourDirections.Location = new System.Drawing.Point(6, 127);
+      this.RBAllFourDirections.Name = "RBAllFourDirections";
+      this.RBAllFourDirections.Size = new System.Drawing.Size(172, 28);
+      this.RBAllFourDirections.TabIndex = 2;
+      this.RBAllFourDirections.Text = "All four directions";
+      this.RBAllFourDirections.UseVisualStyleBackColor = true;
+      this.RBAllFourDirections.CheckedChanged += new System.EventHandler(this.RBLeftDirection_CheckedChanged);
+      // 
+      // RBLetfAndUpDirections
+      // 
+      this.RBLetfAndUpDirections.AutoSize = true;
+      this.RBLetfAndUpDirections.Location = new System.Drawing.Point(6, 93);
+      this.RBLetfAndUpDirections.Name = "RBLetfAndUpDirections";
+      this.RBLetfAndUpDirections.Size = new System.Drawing.Size(209, 28);
+      this.RBLetfAndUpDirections.TabIndex = 1;
+      this.RBLetfAndUpDirections.Text = "Left and Up directions";
+      this.RBLetfAndUpDirections.UseVisualStyleBackColor = true;
+      this.RBLetfAndUpDirections.CheckedChanged += new System.EventHandler(this.RBLeftDirection_CheckedChanged);
+      // 
+      // RBLeftDirection
+      // 
+      this.RBLeftDirection.AutoSize = true;
+      this.RBLeftDirection.Checked = true;
+      this.RBLeftDirection.Location = new System.Drawing.Point(6, 59);
+      this.RBLeftDirection.Name = "RBLeftDirection";
+      this.RBLeftDirection.Size = new System.Drawing.Size(174, 28);
+      this.RBLeftDirection.TabIndex = 0;
+      this.RBLeftDirection.TabStop = true;
+      this.RBLeftDirection.Text = "Left direction only";
+      this.RBLeftDirection.UseVisualStyleBackColor = true;
+      this.RBLeftDirection.CheckedChanged += new System.EventHandler(this.RBLeftDirection_CheckedChanged);
+      // 
+      // LNumberOfMonstersAtLvl
+      // 
+      this.LNumberOfMonstersAtLvl.AutoSize = true;
+      this.LNumberOfMonstersAtLvl.Location = new System.Drawing.Point(6, 215);
+      this.LNumberOfMonstersAtLvl.Name = "LNumberOfMonstersAtLvl";
+      this.LNumberOfMonstersAtLvl.Size = new System.Drawing.Size(249, 24);
+      this.LNumberOfMonstersAtLvl.TabIndex = 20;
+      this.LNumberOfMonstersAtLvl.Text = "Number of monsters at level:";
+      // 
+      // mTBNumberOfMonstersAtLevel
+      // 
+      this.mTBNumberOfMonstersAtLevel.Location = new System.Drawing.Point(261, 212);
+      this.mTBNumberOfMonstersAtLevel.Mask = "0000";
+      this.mTBNumberOfMonstersAtLevel.Name = "mTBNumberOfMonstersAtLevel";
+      this.mTBNumberOfMonstersAtLevel.Size = new System.Drawing.Size(100, 29);
+      this.mTBNumberOfMonstersAtLevel.TabIndex = 19;
+      this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.mTBNumberOfMonstersAtLevel_TextChanged);
       // 
       // mTBArmor
       // 
@@ -426,24 +498,6 @@
       this.SDForSaveConfiguration.FileName = "*.tdgc";
       this.SDForSaveConfiguration.Filter = "Файлы конфигруации игры|*.tdgc";
       // 
-      // mTBNumberOfMonstersAtLevel
-      // 
-      this.mTBNumberOfMonstersAtLevel.Location = new System.Drawing.Point(261, 212);
-      this.mTBNumberOfMonstersAtLevel.Mask = "0000";
-      this.mTBNumberOfMonstersAtLevel.Name = "mTBNumberOfMonstersAtLevel";
-      this.mTBNumberOfMonstersAtLevel.Size = new System.Drawing.Size(100, 29);
-      this.mTBNumberOfMonstersAtLevel.TabIndex = 19;
-      this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.mTBNumberOfMonstersAtLevel_TextChanged);
-      // 
-      // LNumberOfMonstersAtLvl
-      // 
-      this.LNumberOfMonstersAtLvl.AutoSize = true;
-      this.LNumberOfMonstersAtLvl.Location = new System.Drawing.Point(6, 215);
-      this.LNumberOfMonstersAtLvl.Name = "LNumberOfMonstersAtLvl";
-      this.LNumberOfMonstersAtLvl.Size = new System.Drawing.Size(249, 24);
-      this.LNumberOfMonstersAtLvl.TabIndex = 20;
-      this.LNumberOfMonstersAtLvl.Text = "Number of monsters at level:";
-      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -469,6 +523,8 @@
       this.GBMapManage.PerformLayout();
       this.GBLevelConfig.ResumeLayout(false);
       this.GBLevelConfig.PerformLayout();
+      this.GBNumberOfDirections.ResumeLayout(false);
+      this.GBNumberOfDirections.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.nUDCanvaSpeed)).EndInit();
       this.PMonsterPict.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).EndInit();
@@ -514,6 +570,10 @@
     private System.Windows.Forms.SaveFileDialog SDForSaveConfiguration;
     private System.Windows.Forms.Label LNumberOfMonstersAtLvl;
     private System.Windows.Forms.MaskedTextBox mTBNumberOfMonstersAtLevel;
+    private System.Windows.Forms.GroupBox GBNumberOfDirections;
+    private System.Windows.Forms.RadioButton RBAllFourDirections;
+    private System.Windows.Forms.RadioButton RBLetfAndUpDirections;
+    private System.Windows.Forms.RadioButton RBLeftDirection;
   }
 }
 

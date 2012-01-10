@@ -1,13 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GameCoClassLiblary;
 
@@ -38,6 +35,7 @@ namespace GameEditor
       mTBNumberOfMonstersAtLevel.Text = "20";
       nUDCanvaSpeed.Value = 1;
       PBMosterPict.Image = null;
+      RBLeftDirection.Checked = true;
       RealChange = true;
     }
 
@@ -54,9 +52,11 @@ namespace GameEditor
       BNewGameConfig.Tag = 1;
       GBLevelConfig.Enabled = true;
       GBMapManage.Enabled = true;
+      GBNumberOfDirections.Enabled = false;
       BNextLevel.Enabled = false;
       BPrevLevel.Enabled = false;
       BRemoveLevel.Enabled = false;
+      BLoadMonsterPict.Enabled = false;
       CurrentLevel = 0;
       LCurrentNCountLevel.Text = "Level: 0/0";
       PBMap.Image = null;
@@ -80,12 +80,24 @@ namespace GameEditor
       LCurrentNCountLevel.Text = "Level: " + LevelNum.ToString() + "/" + LevelsConfig.Count.ToString();
       //Вывод картинки
       MonsterParam Tmp = LevelsConfig[LevelNum - 1];
-      if (Tmp[0, 0] != null)
+      if (Tmp[MonsterDirection.Left, 0] != null)
         DrawMonsterPhases(MonsterDirection.Left);
       else
       {
         PBMosterPict.Image = null;
         PBMosterPict.Size = new Size(210, 254);
+      }
+      switch (Tmp.NumberOfDirectionsInFile)
+      {
+        case 1:
+          RBLeftDirection.Checked = true;
+          break;
+        case 2:
+          RBLetfAndUpDirections.Checked = true;
+          break;
+        case 4:
+          RBAllFourDirections.Checked = true;
+          break;
       }
       RealChange = true;
     }
@@ -201,7 +213,7 @@ namespace GameEditor
                 break;
             }
           }
-          if (NumberOfMonstersAtLevel.Count()<LevelsCount)
+          if (NumberOfMonstersAtLevel.Count() < LevelsCount)
           {
             for (int i = NumberOfMonstersAtLevel.Count(); i < LevelsCount; i++)
               NumberOfMonstersAtLevel.Add(20);
@@ -228,6 +240,7 @@ namespace GameEditor
           if (LevelsConfig.Count() > 1)
           {
             BLoadMonsterPict.Enabled = true;
+            GBNumberOfDirections.Enabled = true;
           }
         }
         catch (Exception exc)
@@ -273,6 +286,8 @@ namespace GameEditor
       {
         if (FileName == string.Empty)
           return false;
+        string MapNameGetting = ODForFileSelect.FileName.Substring(ODForFileSelect.FileName.LastIndexOf('\\') + 1);
+        LMapName.Text = "Map name: " + MapNameGetting.Substring(0, MapNameGetting.IndexOf('.'));
         TMap Map = new TMap(FileName);
         Bitmap TmpImg = new Bitmap(Map.Width * 15, Map.Height * 15);
         Graphics Canva = Graphics.FromImage(TmpImg);//создали канву
@@ -294,7 +309,7 @@ namespace GameEditor
     #region Добавление и удаление уровней
     private void BAddLevel_Click(object sender, EventArgs e)//Добавление уровня
     {
-      MonsterParam tmp = new MonsterParam(1, 100, 1, 10, 1, "");
+      MonsterParam tmp = new MonsterParam(1, 100, 1, 10, 1, "", 1);
       //LevelsConfig.Add(tmp);//Добавили шаблон нового уровня в конец
       LevelsConfig.Insert(CurrentLevel++, tmp);
       NumberOfMonstersAtLevel.Insert(CurrentLevel - 1, 20);
@@ -309,6 +324,7 @@ namespace GameEditor
       if (LevelsConfig.Count == 1)
       {
         BLoadMonsterPict.Enabled = true;//разрешить добавление картинки
+        GBNumberOfDirections.Enabled = true;
       }
       DefualtForNewLevel();//установить шаблон
       BRemoveLevel.Enabled = true;
@@ -323,6 +339,7 @@ namespace GameEditor
       if (LevelsConfig.Count == 0)//Если число уровней равно нулю
       {
         BLoadMonsterPict.Enabled = false;
+        GBNumberOfDirections.Enabled = false;
         BRemoveLevel.Enabled = false;
         CurrentLevel = 0;
       }
@@ -401,7 +418,7 @@ namespace GameEditor
       LevelsConfig[CurrentLevel - 1] = Tmp;
       if (RealChange)
         BNewGameConfig.Tag = 1;
-      if (Tmp[0, 0] != null)
+      if (Tmp[MonsterDirection.Left, 0] != null)
       {
         DrawMonsterPhases(MonsterDirection.Left);
       }
@@ -445,7 +462,7 @@ namespace GameEditor
     private void DrawMonsterPhases(MonsterDirection Direction)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
-      if (Tmp[0, 0] == null)
+      if (Tmp[MonsterDirection.Left, 0] == null)
         return;
       Bitmap TmpForDrawing;
       TmpForDrawing = new Bitmap(PBMosterPict.Width, (Tmp[Direction, 0].Height * Tmp.NumberOfPhases) + ((20 * Tmp.NumberOfPhases) - 1));
@@ -463,6 +480,7 @@ namespace GameEditor
     private void BLoadMonsterPict_Click(object sender, EventArgs e)
     {
       ODForFileSelect.Filter = "Файл с изображением монстра|*.bmp";
+      ODForFileSelect.FileName = "*.bmp";
       if (ODForFileSelect.ShowDialog() == DialogResult.OK)
       {
         try
@@ -485,8 +503,8 @@ namespace GameEditor
 
     private void LBDirectionSelect_SelectedIndexChanged(object sender, EventArgs e)
     {
-      var Tmp = LevelsConfig[CurrentLevel - 1];
-      if (Tmp[0, 0] != null)
+      MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+      if (Tmp[MonsterDirection.Left, 0] != null)
       {
         DrawMonsterPhases((MonsterDirection)LBDirectionSelect.SelectedIndex);
       }
@@ -501,6 +519,32 @@ namespace GameEditor
       else
         if (RealChange)
           BNewGameConfig.Tag = 1;
+    }
+
+    private void RBLeftDirection_CheckedChanged(object sender, EventArgs e)//Изменение числа направлений
+    {
+      if (RealChange)
+      {
+        MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+        if (RBLeftDirection.Checked)
+        {
+          Tmp.NumberOfDirectionsInFile = 1;
+        }
+        else if (RBLetfAndUpDirections.Checked)
+        {
+          Tmp.NumberOfDirectionsInFile = 2;
+        }
+        else if (RBAllFourDirections.Checked)
+        {
+          Tmp.NumberOfDirectionsInFile = 4;
+        }
+        LevelsConfig[CurrentLevel - 1] = Tmp;
+        BNewGameConfig.Tag = 1;
+        if (Tmp[MonsterDirection.Left, 0] != null)
+        {
+          DrawMonsterPhases(MonsterDirection.Left);
+        }
+      }
     }
 
   }
