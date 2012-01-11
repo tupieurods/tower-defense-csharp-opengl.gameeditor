@@ -15,7 +15,7 @@ namespace GameEditor
     #region delegats
 
     //Для проверки на соответствие при изменении значений в maskedTextBox'ах
-    delegate void Check(string InValue, int DefaultValue, out int CheckResult);
+    delegate void Check(string InValue, int ValueBeforeChange, out int CheckResult);
 
     #endregion
 
@@ -401,34 +401,37 @@ namespace GameEditor
       }
       if ((CurrentLevel <= 0) || ((sender as MaskedTextBox).Text == string.Empty))
         return;
-      Check CheckInput = (string InValue, int DefaultValue, out int CheckResult) =>
+      Check CheckInput = (string InValue, int ValueBeforeChange, out int CheckResult) =>
       {
         CheckResult = Convert.ToInt32(InValue.Replace(" ", string.Empty)) == 0 ?
-          DefaultValue : Convert.ToInt32(InValue.Replace(" ", string.Empty));
+          ValueBeforeChange : Convert.ToInt32(InValue.Replace(" ", string.Empty));
       };
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+      bool NeedRedraw = false;
       switch ((sender as MaskedTextBox).Name)
       {
         case "mTBHealthPoints":
-          CheckInput(mTBHealthPoints.Text, 100, out Tmp.HealthPoints);
+          CheckInput(mTBHealthPoints.Text, Tmp.HealthPoints, out Tmp.HealthPoints);
           break;
         case "mTBGoldForKill":
-          CheckInput(mTBGoldForKill.Text, 10, out Tmp.GoldForKill);
+          CheckInput(mTBGoldForKill.Text, Tmp.GoldForKill, out Tmp.GoldForKill);
           break;
         case "mTBNumberOfPhases":
-          CheckInput(mTBNumberOfPhases.Text, 1, out Tmp.NumberOfPhases);
-          DrawMonsterPhases(MonsterDirection.Left);
+          CheckInput(mTBNumberOfPhases.Text, Tmp.NumberOfPhases, out Tmp.NumberOfPhases);
+          NeedRedraw = true;
           break;
         case "mTBArmor":
-          CheckInput(mTBArmor.Text, 1, out Tmp.Armor);
+          CheckInput(mTBArmor.Text, Tmp.Armor, out Tmp.Armor);
           break;
         case "mTBNumberOfMonstersAtLevel":
           int TmpInt = NumberOfMonstersAtLevel[CurrentLevel - 1];
-          CheckInput(mTBNumberOfMonstersAtLevel.Text, 20, out TmpInt);
+          CheckInput(mTBNumberOfMonstersAtLevel.Text, TmpInt, out TmpInt);
           NumberOfMonstersAtLevel[CurrentLevel - 1] = TmpInt;
           break;
       }
       LevelsConfig[CurrentLevel - 1] = Tmp;
+      if(NeedRedraw)
+        DrawMonsterPhases(MonsterDirection.Left);
       if (RealChange)
         BNewGameConfig.Tag = 1;
     }
