@@ -7,5 +7,5 @@ C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Debug\Ge
 C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Debug\GameEditor.exe
 C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\obj\x86\Debug\GameEditor.pdb
-C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Debug\GameCoClassLiblary.dll
-C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Debug\GameCoClassLiblary.pdb
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Debug\GameCoClassLibrary.dll
+C:\Users\Elun\Desktop\Tower Defence C#\GameEditorApp\GameEditor\bin\Debug\GameCoClassLibrary.pdb

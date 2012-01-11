@@ -205,14 +205,15 @@
       this.GBNumberOfDirections.Size = new System.Drawing.Size(291, 168);
       this.GBNumberOfDirections.TabIndex = 21;
       this.GBNumberOfDirections.TabStop = false;
+      this.GBNumberOfDirections.Tag = "0";
       this.GBNumberOfDirections.Text = "Number of directions in bitmap file";
       // 
       // RBAllFourDirections
       // 
       this.RBAllFourDirections.AutoSize = true;
-      this.RBAllFourDirections.Location = new System.Drawing.Point(6, 127);
+      this.RBAllFourDirections.Location = new System.Drawing.Point(6, 130);
       this.RBAllFourDirections.Name = "RBAllFourDirections";
-      this.RBAllFourDirections.Size = new System.Drawing.Size(172, 28);
+      this.RBAllFourDirections.Size = new System.Drawing.Size(105, 17);
       this.RBAllFourDirections.TabIndex = 2;
       this.RBAllFourDirections.Text = "All four directions";
       this.RBAllFourDirections.UseVisualStyleBackColor = true;
@@ -223,7 +224,7 @@
       this.RBLetfAndUpDirections.AutoSize = true;
       this.RBLetfAndUpDirections.Location = new System.Drawing.Point(6, 93);
       this.RBLetfAndUpDirections.Name = "RBLetfAndUpDirections";
-      this.RBLetfAndUpDirections.Size = new System.Drawing.Size(209, 28);
+      this.RBLetfAndUpDirections.Size = new System.Drawing.Size(129, 17);
       this.RBLetfAndUpDirections.TabIndex = 1;
       this.RBLetfAndUpDirections.Text = "Left and Up directions";
       this.RBLetfAndUpDirections.UseVisualStyleBackColor = true;
@@ -235,7 +236,7 @@
       this.RBLeftDirection.Checked = true;
       this.RBLeftDirection.Location = new System.Drawing.Point(6, 59);
       this.RBLeftDirection.Name = "RBLeftDirection";
-      this.RBLeftDirection.Size = new System.Drawing.Size(174, 28);
+      this.RBLeftDirection.Size = new System.Drawing.Size(108, 17);
       this.RBLeftDirection.TabIndex = 0;
       this.RBLeftDirection.TabStop = true;
       this.RBLeftDirection.Text = "Left direction only";
@@ -258,7 +259,7 @@
       this.mTBNumberOfMonstersAtLevel.Name = "mTBNumberOfMonstersAtLevel";
       this.mTBNumberOfMonstersAtLevel.Size = new System.Drawing.Size(100, 29);
       this.mTBNumberOfMonstersAtLevel.TabIndex = 19;
-      this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.mTBNumberOfMonstersAtLevel_TextChanged);
+      this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // mTBArmor
       // 
@@ -268,7 +269,7 @@
       this.mTBArmor.Size = new System.Drawing.Size(100, 29);
       this.mTBArmor.TabIndex = 18;
       this.mTBArmor.Text = "1";
-      this.mTBArmor.TextChanged += new System.EventHandler(this.mTBArmor_TextChanged);
+      this.mTBArmor.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // LArmor
       // 
@@ -333,7 +334,7 @@
       this.mTBGoldForKill.TabIndex = 13;
       this.mTBGoldForKill.Text = "10";
       this.mTBGoldForKill.ValidatingType = typeof(int);
-      this.mTBGoldForKill.TextChanged += new System.EventHandler(this.mTBGoldForKill_TextChanged);
+      this.mTBGoldForKill.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // mTBHealthPoints
       // 
@@ -343,7 +344,7 @@
       this.mTBHealthPoints.Size = new System.Drawing.Size(100, 29);
       this.mTBHealthPoints.TabIndex = 11;
       this.mTBHealthPoints.Text = "100";
-      this.mTBHealthPoints.TextChanged += new System.EventHandler(this.mTBHealthPoints_TextChanged);
+      this.mTBHealthPoints.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // BRemoveLevel
       // 
@@ -413,7 +414,7 @@
       this.mTBNumberOfPhases.TabIndex = 6;
       this.mTBNumberOfPhases.Text = "1";
       this.mTBNumberOfPhases.ValidatingType = typeof(int);
-      this.mTBNumberOfPhases.TextChanged += new System.EventHandler(this.mTBNumberOfPhases_TextChanged);
+      this.mTBNumberOfPhases.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // LBDirectionSelect
       // 

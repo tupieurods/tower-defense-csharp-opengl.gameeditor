@@ -6,12 +6,19 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using GameCoClassLiblary;
+using GameCoClassLibrary;
 
 namespace GameEditor
 {
   public partial class MainForm : Form
   {
+    #region delegats
+
+    //Для проверки на соответствие при изменении значений в maskedTextBox'ах
+    delegate void Check(string InValue, int DefaultValue, out int CheckResult);
+
+    #endregion
+
     private List<MonsterParam> LevelsConfig;//конфигурация монстров на уровнях
     private List<int> NumberOfMonstersAtLevel;//Число монстров на каждлм из уровней
     private int CurrentLevel = 0;//показывает текущий уровень
@@ -384,53 +391,43 @@ namespace GameEditor
     #endregion
 
     #region Изменение текста в mTB задающих параметры
-    private void mTBHealthPoints_TextChanged(object sender, EventArgs e)
-    {
-      if ((CurrentLevel <= 0) || (mTBHealthPoints.Text == string.Empty))
-        return;
-      var Tmp = LevelsConfig[CurrentLevel - 1];
-      Tmp.HealthPoints = Convert.ToInt32(mTBHealthPoints.Text.Replace(" ", string.Empty)) == 0 ?
-        100 : Convert.ToInt32(mTBHealthPoints.Text.Replace(" ", string.Empty));
-      LevelsConfig[CurrentLevel - 1] = Tmp;
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
-    }
 
-    private void mTBGoldForKill_TextChanged(object sender, EventArgs e)
+    private void maskedTextBoxChanged(object sender, EventArgs e)
     {
-      if ((CurrentLevel <= 0) || (mTBGoldForKill.Text == string.Empty))
-        return;
-      var Tmp = LevelsConfig[CurrentLevel - 1];
-      Tmp.GoldForKill = Convert.ToInt32(mTBGoldForKill.Text.Replace(" ", string.Empty)) == 0 ?
-        10 : Convert.ToInt32(mTBGoldForKill.Text.Replace(" ", string.Empty));
-      LevelsConfig[CurrentLevel - 1] = Tmp;
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
-    }
-
-    private void mTBNumberOfPhases_TextChanged(object sender, EventArgs e)
-    {
-      if ((CurrentLevel <= 0) || (mTBNumberOfPhases.Text == string.Empty))
-        return;
-      var Tmp = LevelsConfig[CurrentLevel - 1];
-      Tmp.NumberOfPhases = Convert.ToInt32(mTBNumberOfPhases.Text.Replace(" ", string.Empty)) == 0 ?
-        1 : Convert.ToInt32(mTBNumberOfPhases.Text.Replace(" ", string.Empty));
-      LevelsConfig[CurrentLevel - 1] = Tmp;
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
-      if (Tmp[MonsterDirection.Left, 0] != null)
+      if ((sender as MaskedTextBox) == null)
       {
-        DrawMonsterPhases(MonsterDirection.Left);
-      }
-    }
-
-    private void mTBArmor_TextChanged(object sender, EventArgs e)
-    {
-      if ((CurrentLevel <= 0) || (mTBArmor.Text == string.Empty))
+        MessageBox.Show("BAD BAD BAD programmer! Used metod incorrect. KILL HIM");
         return;
-      var Tmp = LevelsConfig[CurrentLevel - 1];
-      Tmp.Armor = Convert.ToInt32(mTBArmor.Text.Replace(" ", string.Empty)) == 0 ?
-        1 : Convert.ToInt32(mTBArmor.Text.Replace(" ", string.Empty));
+      }
+      if ((CurrentLevel <= 0) || ((sender as MaskedTextBox).Text == string.Empty))
+        return;
+      Check CheckInput = (string InValue, int DefaultValue, out int CheckResult) =>
+      {
+        CheckResult = Convert.ToInt32(InValue.Replace(" ", string.Empty)) == 0 ?
+          DefaultValue : Convert.ToInt32(InValue.Replace(" ", string.Empty));
+      };
+      MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+      switch ((sender as MaskedTextBox).Name)
+      {
+        case "mTBHealthPoints":
+          CheckInput(mTBHealthPoints.Text, 100, out Tmp.HealthPoints);
+          break;
+        case "mTBGoldForKill":
+          CheckInput(mTBGoldForKill.Text, 10, out Tmp.GoldForKill);
+          break;
+        case "mTBNumberOfPhases":
+          CheckInput(mTBNumberOfPhases.Text, 1, out Tmp.NumberOfPhases);
+          DrawMonsterPhases(MonsterDirection.Left);
+          break;
+        case "mTBArmor":
+          CheckInput(mTBArmor.Text, 1, out Tmp.Armor);
+          break;
+        case "mTBNumberOfMonstersAtLevel":
+          int TmpInt = NumberOfMonstersAtLevel[CurrentLevel - 1];
+          CheckInput(mTBNumberOfMonstersAtLevel.Text, 20, out TmpInt);
+          NumberOfMonstersAtLevel[CurrentLevel - 1] = TmpInt;
+          break;
+      }
       LevelsConfig[CurrentLevel - 1] = Tmp;
       if (RealChange)
         BNewGameConfig.Tag = 1;
@@ -446,35 +443,32 @@ namespace GameEditor
       if (RealChange)
         BNewGameConfig.Tag = 1;
     }
-
-    private void mTBNumberOfMonstersAtLevel_TextChanged(object sender, EventArgs e)
-    {
-      if ((CurrentLevel <= 0) || (mTBNumberOfMonstersAtLevel.Text == string.Empty))
-        return;
-      NumberOfMonstersAtLevel[CurrentLevel - 1] = Convert.ToInt32(mTBNumberOfMonstersAtLevel.Text) == 0 ?
-        20 : Convert.ToInt32(mTBNumberOfMonstersAtLevel.Text.Replace(" ", string.Empty));
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
-    }
     #endregion
 
     #region Загрузка/Отрисовка изображения монстра
     private void DrawMonsterPhases(MonsterDirection Direction)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
-      if (Tmp[MonsterDirection.Left, 0] == null)
-        return;
-      Bitmap TmpForDrawing;
-      TmpForDrawing = new Bitmap(PBMosterPict.Width, (Tmp[Direction, 0].Height * Tmp.NumberOfPhases) + ((20 * Tmp.NumberOfPhases) - 1));
-      PBMosterPict.Height = TmpForDrawing.Height;
-      Graphics Canva = Graphics.FromImage(TmpForDrawing);
-      Canva.FillRectangle(new SolidBrush(Color.Blue), new Rectangle(0, 0, PBMosterPict.Width, PBMosterPict.Height));
-      for (int PhaseNum = 0; PhaseNum < Tmp.NumberOfPhases; PhaseNum++)
+      try
       {
-        Canva.DrawImage(Tmp[Direction, PhaseNum], (PBMosterPict.Width / 2) - (Tmp[Direction, PhaseNum].Width / 2), (PhaseNum * Tmp[Direction, PhaseNum].Height + 20 * PhaseNum),
-          Tmp[Direction, PhaseNum].Width, Tmp[Direction, PhaseNum].Height);//Приходится указывать размеры, т.к без них происходит прорисовка в дюймах
+        if (Tmp[MonsterDirection.Left, 0] == null)
+          return;
+        Bitmap TmpForDrawing = new Bitmap(PBMosterPict.Width, (Tmp[Direction, 0].Height * Tmp.NumberOfPhases) + ((20 * Tmp.NumberOfPhases) - 1));
+        PBMosterPict.Height = TmpForDrawing.Height;
+        Graphics Canva = Graphics.FromImage(TmpForDrawing);
+        Canva.FillRectangle(new SolidBrush(Color.Blue), new Rectangle(0, 0, PBMosterPict.Width, PBMosterPict.Height));
+        for (int PhaseNum = 0; PhaseNum < Tmp.NumberOfPhases; PhaseNum++)
+        {
+          Canva.DrawImage(Tmp[Direction, PhaseNum], (PBMosterPict.Width / 2) - (Tmp[Direction, PhaseNum].Width / 2), (PhaseNum * Tmp[Direction, PhaseNum].Height + 20 * PhaseNum),
+            Tmp[Direction, PhaseNum].Width, Tmp[Direction, PhaseNum].Height);//Приходится указывать размеры, т.к без них происходит прорисовка в дюймах
+        }
+        PBMosterPict.Image = TmpForDrawing;
       }
-      PBMosterPict.Image = TmpForDrawing;
+      catch (Exception e)
+      {
+        MessageBox.Show(e.Message);
+        return;
+      }
     }
 
     private void BLoadMonsterPict_Click(object sender, EventArgs e)
@@ -504,10 +498,7 @@ namespace GameEditor
     private void LBDirectionSelect_SelectedIndexChanged(object sender, EventArgs e)
     {
       MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
-      if (Tmp[MonsterDirection.Left, 0] != null)
-      {
-        DrawMonsterPhases((MonsterDirection)LBDirectionSelect.SelectedIndex);
-      }
+      DrawMonsterPhases((MonsterDirection)LBDirectionSelect.SelectedIndex);
     }
     #endregion
 
@@ -523,6 +514,16 @@ namespace GameEditor
 
     private void RBLeftDirection_CheckedChanged(object sender, EventArgs e)//Изменение числа направлений
     {
+      if (Convert.ToInt32(GBNumberOfDirections.Tag) == 0)//Т.к это один обработчик для всех RadioButton
+      //определяющих число направлений, чтобы не проводилось две обработки используется свойство Tag
+      {
+        GBNumberOfDirections.Tag = 1;
+      }
+      else
+      {
+        GBNumberOfDirections.Tag = 0;
+        return;
+      }
       if (RealChange)
       {
         MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
@@ -540,10 +541,7 @@ namespace GameEditor
         }
         LevelsConfig[CurrentLevel - 1] = Tmp;
         BNewGameConfig.Tag = 1;
-        if (Tmp[MonsterDirection.Left, 0] != null)
-        {
-          DrawMonsterPhases(MonsterDirection.Left);
-        }
+        DrawMonsterPhases(MonsterDirection.Left);
       }
     }
 
