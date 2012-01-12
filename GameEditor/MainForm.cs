@@ -296,11 +296,12 @@ namespace GameEditor
         string MapNameGetting = ODForFileSelect.FileName.Substring(ODForFileSelect.FileName.LastIndexOf('\\') + 1);
         LMapName.Text = "Map name: " + MapNameGetting.Substring(0, MapNameGetting.IndexOf('.'));
         TMap Map = new TMap(FileName);
-        Bitmap TmpImg = new Bitmap(Map.Width * 15, Map.Height * 15);
+        Bitmap TmpImg = new Bitmap(Convert.ToInt32(Map.Width * 15 * Map.Scaling), 
+          Convert.ToInt32(Map.Height * 15 * Map.Scaling));
         Graphics Canva = Graphics.FromImage(TmpImg);//создали канву
         Map.ShowOnGraphics(Canva);
-        PBMap.Width = Map.Width * 15;//Установили размеры
-        PBMap.Height = Map.Height * 15;
+        PBMap.Width = Convert.ToInt32(Map.Width * 15 * Map.Scaling);//Установили размеры
+        PBMap.Height = Convert.ToInt32(Map.Height * 15 * Map.Scaling);
         PBMap.Image = TmpImg;
       }
       catch
@@ -430,7 +431,7 @@ namespace GameEditor
           break;
       }
       LevelsConfig[CurrentLevel - 1] = Tmp;
-      if(NeedRedraw)
+      if (NeedRedraw)
         DrawMonsterPhases(MonsterDirection.Left);
       if (RealChange)
         BNewGameConfig.Tag = 1;
