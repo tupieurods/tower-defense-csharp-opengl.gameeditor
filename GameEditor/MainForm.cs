@@ -19,7 +19,7 @@ namespace GameEditor
 
     #endregion
 
-    private List<MonsterParam> LevelsConfig;//конфигурация монстров на уровнях
+    private List<MonsterParam> LevelsConfig;
     private List<int> NumberOfMonstersAtLevel;//Число монстров на каждлм из уровней
     private int CurrentLevel = 0;//показывает текущий уровень
     private bool RealChange = true;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
@@ -43,6 +43,7 @@ namespace GameEditor
       nUDCanvaSpeed.Value = 1;
       PBMosterPict.Image = null;
       RBLeftDirection.Checked = true;
+      CBLevelInvisible.Checked = false;
       RealChange = true;
     }
 
@@ -64,6 +65,7 @@ namespace GameEditor
       BPrevLevel.Enabled = false;
       BRemoveLevel.Enabled = false;
       BLoadMonsterPict.Enabled = false;
+      CBLevelInvisible.Enabled = false;
       CurrentLevel = 0;
       LCurrentNCountLevel.Text = "Level: 0/0";
       PBMap.Image = null;
@@ -84,6 +86,7 @@ namespace GameEditor
       nUDCanvaSpeed.Value = LevelsConfig[LevelNum - 1].CanvasSpeed;
       mTBArmor.Text = LevelsConfig[LevelNum - 1].Armor.ToString();
       mTBNumberOfMonstersAtLevel.Text = NumberOfMonstersAtLevel[LevelNum - 1].ToString();
+      CBLevelInvisible.Checked = LevelsConfig[LevelNum - 1].Invisible;
       LCurrentNCountLevel.Text = "Level: " + LevelNum.ToString() + "/" + LevelsConfig.Count.ToString();
       //Вывод картинки
       MonsterParam Tmp = LevelsConfig[LevelNum - 1];
@@ -259,6 +262,8 @@ namespace GameEditor
       BNewGameConfig.Tag = 2;
       GBLevelConfig.Enabled = true;
       GBMapManage.Enabled = true;
+      if (LevelsConfig.Count != 0)
+        CBLevelInvisible.Enabled = true;
       if (LevelsConfig.Count > 1)
       {
         BPrevLevel.Enabled = true;
@@ -296,7 +301,7 @@ namespace GameEditor
         string MapNameGetting = ODForFileSelect.FileName.Substring(ODForFileSelect.FileName.LastIndexOf('\\') + 1);
         LMapName.Text = "Map name: " + MapNameGetting.Substring(0, MapNameGetting.IndexOf('.'));
         TMap Map = new TMap(FileName);
-        Bitmap TmpImg = new Bitmap(Convert.ToInt32(Map.Width * 15 * Map.Scaling), 
+        Bitmap TmpImg = new Bitmap(Convert.ToInt32(Map.Width * 15 * Map.Scaling),
           Convert.ToInt32(Map.Height * 15 * Map.Scaling));
         Graphics Canva = Graphics.FromImage(TmpImg);//создали канву
         Map.ShowOnGraphics(Canva);
@@ -333,6 +338,7 @@ namespace GameEditor
       {
         BLoadMonsterPict.Enabled = true;//разрешить добавление картинки
         GBNumberOfDirections.Enabled = true;
+        CBLevelInvisible.Enabled = true;
       }
       DefualtForNewLevel();//установить шаблон
       BRemoveLevel.Enabled = true;
@@ -349,6 +355,7 @@ namespace GameEditor
         BLoadMonsterPict.Enabled = false;
         GBNumberOfDirections.Enabled = false;
         BRemoveLevel.Enabled = false;
+        CBLevelInvisible.Enabled = false;
         CurrentLevel = 0;
       }
       else
@@ -395,13 +402,13 @@ namespace GameEditor
 
     private void maskedTextBoxChanged(object sender, EventArgs e)
     {
+      if ((CurrentLevel <= 0) || ((sender as MaskedTextBox).Text == string.Empty) || (!RealChange))
+        return;
       if ((sender as MaskedTextBox) == null)
       {
         MessageBox.Show("BAD BAD BAD programmer! Used metod incorrect. KILL HIM");
         return;
       }
-      if ((CurrentLevel <= 0) || ((sender as MaskedTextBox).Text == string.Empty))
-        return;
       Check CheckInput = (string InValue, int ValueBeforeChange, out int CheckResult) =>
       {
         CheckResult = Convert.ToInt32(InValue.Replace(" ", string.Empty)) == 0 ?
@@ -433,19 +440,27 @@ namespace GameEditor
       LevelsConfig[CurrentLevel - 1] = Tmp;
       if (NeedRedraw)
         DrawMonsterPhases(MonsterDirection.Left);
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
+      BNewGameConfig.Tag = 1;
     }
 
     private void nUDCanvaSpeed_Validated(object sender, EventArgs e)
     {
-      if (CurrentLevel <= 0)
+      if ((CurrentLevel <= 0) || (!RealChange))
         return;
-      var Tmp = LevelsConfig[CurrentLevel - 1];
+      MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
       Tmp.CanvasSpeed = Convert.ToInt32(nUDCanvaSpeed.Value);
       LevelsConfig[CurrentLevel - 1] = Tmp;
-      if (RealChange)
-        BNewGameConfig.Tag = 1;
+      BNewGameConfig.Tag = 1;
+    }
+
+    private void CBLevelInvisible_CheckedChanged(object sender, EventArgs e)
+    {
+      if ((CurrentLevel <= 0) || (!RealChange))
+        return;
+      MonsterParam Tmp = LevelsConfig[CurrentLevel - 1];
+      Tmp.Invisible = CBLevelInvisible.Checked;
+      LevelsConfig[CurrentLevel - 1] = Tmp;
+      BNewGameConfig.Tag = 1;
     }
     #endregion
 
@@ -467,6 +482,7 @@ namespace GameEditor
             Tmp[Direction, PhaseNum].Width, Tmp[Direction, PhaseNum].Height);//Приходится указывать размеры, т.к без них происходит прорисовка в дюймах
         }
         PBMosterPict.Image = TmpForDrawing;
+        PMonsterPict.Refresh();
       }
       catch (Exception e)
       {
@@ -546,6 +562,18 @@ namespace GameEditor
         LevelsConfig[CurrentLevel - 1] = Tmp;
         BNewGameConfig.Tag = 1;
         DrawMonsterPhases(MonsterDirection.Left);
+      }
+    }
+
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      if (Convert.ToInt32(BNewGameConfig.Tag) == 1)
+      {
+        if (MessageBox.Show("Game configuration not saved! Save game configuration?", "Game configurator", MessageBoxButtons.YesNo) == DialogResult.Yes)
+        {
+          BSave_Click(sender, new EventArgs());
+          e.Cancel = true;
+        }
       }
     }
 

@@ -38,6 +38,7 @@
       this.BSave = new System.Windows.Forms.Button();
       this.BLoad = new System.Windows.Forms.Button();
       this.GBLevelConfig = new System.Windows.Forms.GroupBox();
+      this.CBLevelInvisible = new System.Windows.Forms.CheckBox();
       this.GBNumberOfDirections = new System.Windows.Forms.GroupBox();
       this.RBAllFourDirections = new System.Windows.Forms.RadioButton();
       this.RBLetfAndUpDirections = new System.Windows.Forms.RadioButton();
@@ -165,6 +166,7 @@
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.CBLevelInvisible);
       this.GBLevelConfig.Controls.Add(this.GBNumberOfDirections);
       this.GBLevelConfig.Controls.Add(this.LNumberOfMonstersAtLvl);
       this.GBLevelConfig.Controls.Add(this.mTBNumberOfMonstersAtLevel);
@@ -194,13 +196,25 @@
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
       // 
+      // CBLevelInvisible
+      // 
+      this.CBLevelInvisible.AutoSize = true;
+      this.CBLevelInvisible.Enabled = false;
+      this.CBLevelInvisible.Location = new System.Drawing.Point(830, 199);
+      this.CBLevelInvisible.Name = "CBLevelInvisible";
+      this.CBLevelInvisible.Size = new System.Drawing.Size(89, 17);
+      this.CBLevelInvisible.TabIndex = 22;
+      this.CBLevelInvisible.Text = "Invisible level";
+      this.CBLevelInvisible.UseVisualStyleBackColor = true;
+      this.CBLevelInvisible.CheckedChanged += new System.EventHandler(this.CBLevelInvisible_CheckedChanged);
+      // 
       // GBNumberOfDirections
       // 
       this.GBNumberOfDirections.Controls.Add(this.RBAllFourDirections);
       this.GBNumberOfDirections.Controls.Add(this.RBLetfAndUpDirections);
       this.GBNumberOfDirections.Controls.Add(this.RBLeftDirection);
       this.GBNumberOfDirections.Enabled = false;
-      this.GBNumberOfDirections.Location = new System.Drawing.Point(830, 32);
+      this.GBNumberOfDirections.Location = new System.Drawing.Point(830, 25);
       this.GBNumberOfDirections.Name = "GBNumberOfDirections";
       this.GBNumberOfDirections.Size = new System.Drawing.Size(291, 168);
       this.GBNumberOfDirections.TabIndex = 21;
@@ -283,7 +297,7 @@
       // BPrevLevel
       // 
       this.BPrevLevel.Enabled = false;
-      this.BPrevLevel.Location = new System.Drawing.Point(102, 258);
+      this.BPrevLevel.Location = new System.Drawing.Point(109, 255);
       this.BPrevLevel.Name = "BPrevLevel";
       this.BPrevLevel.Size = new System.Drawing.Size(136, 30);
       this.BPrevLevel.TabIndex = 16;
@@ -294,7 +308,7 @@
       // BNextLevel
       // 
       this.BNextLevel.Enabled = false;
-      this.BNextLevel.Location = new System.Drawing.Point(244, 258);
+      this.BNextLevel.Location = new System.Drawing.Point(255, 255);
       this.BNextLevel.Name = "BNextLevel";
       this.BNextLevel.Size = new System.Drawing.Size(120, 30);
       this.BNextLevel.TabIndex = 15;
@@ -397,7 +411,7 @@
       // BLoadMonsterPict
       // 
       this.BLoadMonsterPict.Enabled = false;
-      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 258);
+      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 255);
       this.BLoadMonsterPict.Name = "BLoadMonsterPict";
       this.BLoadMonsterPict.Size = new System.Drawing.Size(220, 30);
       this.BLoadMonsterPict.TabIndex = 7;
@@ -407,7 +421,7 @@
       // 
       // mTBNumberOfPhases
       // 
-      this.mTBNumberOfPhases.Location = new System.Drawing.Point(504, 63);
+      this.mTBNumberOfPhases.Location = new System.Drawing.Point(501, 59);
       this.mTBNumberOfPhases.Mask = "00000";
       this.mTBNumberOfPhases.Name = "mTBNumberOfPhases";
       this.mTBNumberOfPhases.Size = new System.Drawing.Size(100, 29);
@@ -425,7 +439,7 @@
             "Right",
             "Down",
             "Left"});
-      this.LBDirectionSelect.Location = new System.Drawing.Point(481, 152);
+      this.LBDirectionSelect.Location = new System.Drawing.Point(481, 149);
       this.LBDirectionSelect.Name = "LBDirectionSelect";
       this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
       this.LBDirectionSelect.TabIndex = 5;
@@ -434,7 +448,7 @@
       // LMonsterSelect
       // 
       this.LMonsterSelect.AutoSize = true;
-      this.LMonsterSelect.Location = new System.Drawing.Point(387, 125);
+      this.LMonsterSelect.Location = new System.Drawing.Point(384, 125);
       this.LMonsterSelect.Name = "LMonsterSelect";
       this.LMonsterSelect.Size = new System.Drawing.Size(217, 24);
       this.LMonsterSelect.TabIndex = 4;
@@ -518,6 +532,7 @@
       this.Name = "MainForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "GameEditor";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.PMapPictBox.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).EndInit();
       this.GBMapManage.ResumeLayout(false);
@@ -575,6 +590,7 @@
     private System.Windows.Forms.RadioButton RBAllFourDirections;
     private System.Windows.Forms.RadioButton RBLetfAndUpDirections;
     private System.Windows.Forms.RadioButton RBLeftDirection;
+    private System.Windows.Forms.CheckBox CBLevelInvisible;
   }
 }
 
