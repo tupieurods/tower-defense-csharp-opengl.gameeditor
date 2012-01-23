@@ -21,8 +21,9 @@ namespace GameEditor
 
     private List<MonsterParam> LevelsConfig;
     private List<int> NumberOfMonstersAtLevel;//Число монстров на каждлм из уровней
+    private List<int> GoldForSuccessfulLevelFinish;
     private int CurrentLevel = 0;//показывает текущий уровень
-    private bool RealChange = true;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
+    private bool RealChange = false;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
     //человеком или программно
 
     public MainForm()
@@ -40,6 +41,7 @@ namespace GameEditor
       mTBHealthPoints.Text = "100";
       mTBNumberOfPhases.Text = "1";
       mTBNumberOfMonstersAtLevel.Text = "20";
+      mTBGoldForSuccessfulLevelFinish.Text = "40";
       nUDCanvaSpeed.Value = 1;
       PBMosterPict.Image = null;
       RBLeftDirection.Checked = true;
@@ -47,12 +49,16 @@ namespace GameEditor
       RealChange = true;
     }
 
-    private void SetDefault()//Default для новой конфигурации уровня
+    private void SetDefault()//Default для новой конфигурации игры
     {
       DefualtForNewLevel();//Для нового уровня
+      LCurrentNCountLevel.Text = "Level: 0/0";
       TBTowerFolder.Text = "Demo";
+      mTBGoldAtStart.Text = "40";
+      mTBNumberOfLives.Text = "20";
       LevelsConfig = new List<MonsterParam>();
       NumberOfMonstersAtLevel = new List<int>();
+      GoldForSuccessfulLevelFinish = new List<int>();
     }
 
     private void CreateNewConfiguration()
@@ -67,11 +73,11 @@ namespace GameEditor
       BLoadMonsterPict.Enabled = false;
       CBLevelInvisible.Enabled = false;
       CurrentLevel = 0;
-      LCurrentNCountLevel.Text = "Level: 0/0";
       PBMap.Image = null;
       PBMap.Size = new Size(10, 10);
       SetDefault();
       BSave.Enabled = true;
+      RealChange = true;
     }
     #endregion
 
@@ -86,6 +92,7 @@ namespace GameEditor
       nUDCanvaSpeed.Value = LevelsConfig[LevelNum - 1].CanvasSpeed;
       mTBArmor.Text = LevelsConfig[LevelNum - 1].Armor.ToString();
       mTBNumberOfMonstersAtLevel.Text = NumberOfMonstersAtLevel[LevelNum - 1].ToString();
+      mTBGoldForSuccessfulLevelFinish.Text = GoldForSuccessfulLevelFinish[LevelNum - 1].ToString();
       CBLevelInvisible.Checked = LevelsConfig[LevelNum - 1].Invisible;
       LCurrentNCountLevel.Text = "Level: " + LevelNum.ToString() + "/" + LevelsConfig.Count.ToString();
       //Вывод картинки
@@ -151,15 +158,34 @@ namespace GameEditor
         try
         {
           BinaryWriter SaveMainConf = new BinaryWriter(new FileStream(SDForSaveConfiguration.FileName, FileMode.Create, FileAccess.Write));
-          SaveMainConf.Write(Convert.ToString(PBMap.Tag));
-          SaveMainConf.Write(TBTowerFolder.Text);
-          SaveMainConf.Write(LevelsConfig.Count);
-          SaveMainConf.Write(1);//Запись числа опций, если в будущем опции появятся, то они должны будут быть записаны далее
+          /*SaveMainConf.Write(Convert.ToString(PBMap.Tag));//Имя файла карты
+          SaveMainConf.Write(TBTowerFolder.Text);//Имя папки с описанием башен
+          SaveMainConf.Write(LevelsConfig.Count);//Число уровней
+          SaveMainConf.Write(4);//Запись числа опций, если в будущем опции появятся, то они должны будут быть записаны далее
           SaveMainConf.Write(1);//Тип опции 1-число монстров на каждом уровне
           foreach (int CountMonsters in NumberOfMonstersAtLevel)
           {
             SaveMainConf.Write(CountMonsters);
           }
+          SaveMainConf.Write(2);//Тип опции 2-Вознаграждение за каждый пройденый уровень
+          foreach (int MoneyForSuccess in GoldForSuccessfulLevelFinish)
+          {
+            SaveMainConf.Write(MoneyForSuccess);
+          }
+          SaveMainConf.Write(3);//Тип опции 3-Число денег при старте игры
+          int Tmp = 40;
+          Int32.TryParse(mTBGoldAtStart.Text, out Tmp);
+          SaveMainConf.Write(Tmp);
+          SaveMainConf.Write(4);//Тип опции 4-Число жизней при старте игры
+          Tmp = 20;
+          Int32.TryParse(mTBNumberOfLives.Text, out Tmp);
+          SaveMainConf.Write(Tmp);*/
+          int Tmp1 = 40;
+          Int32.TryParse(mTBGoldAtStart.Text, out Tmp1);
+          int Tmp2 = 20;
+          Int32.TryParse(mTBNumberOfLives.Text, out Tmp2);
+          SaveNLoad.SaveMainGameConfig(SaveMainConf, NumberOfMonstersAtLevel, GoldForSuccessfulLevelFinish, PBMap.Tag, TBTowerFolder.Text,
+            LevelsConfig.Count, 4, Tmp1, Tmp2);
           SaveMainConf.Close();
         }
         catch (Exception exc)
@@ -202,32 +228,14 @@ namespace GameEditor
         try
         {
           BinaryReader LoadMainConf = new BinaryReader(new FileStream(ODForFileSelect.FileName, FileMode.Open, FileAccess.Read));
-          string MapName = LoadMainConf.ReadString();
+          object[] Tmp;
+          SaveNLoad.LoadMainGameConf(LoadMainConf, ref NumberOfMonstersAtLevel,ref GoldForSuccessfulLevelFinish, out Tmp);
+          string MapName = (string)Tmp[0];//0-имя карты
           ShowMapByFileName(MapName);
-          TBTowerFolder.Text = LoadMainConf.ReadString();
-          LevelsCount = LoadMainConf.ReadInt32();
-          //Считываем число опций и читаем сами опции, в текущей версии 0 опций
-          int NumberOfOptions = LoadMainConf.ReadInt32();
-          for (int i = 0; i < NumberOfOptions; i++)
-          {
-            int OptionNumber = LoadMainConf.ReadInt32();
-            switch (OptionNumber)
-            {
-              case 1:
-                NumberOfMonstersAtLevel.Clear();
-                NumberOfMonstersAtLevel = new List<int>();
-                for (int j = 0; j < LevelsCount; j++)
-                {
-                  NumberOfMonstersAtLevel.Add(LoadMainConf.ReadInt32());
-                }
-                break;
-            }
-          }
-          if (NumberOfMonstersAtLevel.Count() < LevelsCount)
-          {
-            for (int i = NumberOfMonstersAtLevel.Count(); i < LevelsCount; i++)
-              NumberOfMonstersAtLevel.Add(20);
-          }
+          TBTowerFolder.Text = (string)Tmp[1];//1-имя папки с описанием башен
+          LevelsCount = (int)Tmp[2];//2-число уровней
+          mTBGoldAtStart.Text = Convert.ToInt32(Tmp[4]).ToString();//4-золото при старте
+          mTBNumberOfLives.Text = Convert.ToInt32(Tmp[5]).ToString();//5-Число жизней в начале
           LoadMainConf.Close();
         }
         catch (Exception exc)
@@ -326,6 +334,7 @@ namespace GameEditor
       //LevelsConfig.Add(tmp);//Добавили шаблон нового уровня в конец
       LevelsConfig.Insert(CurrentLevel++, tmp);
       NumberOfMonstersAtLevel.Insert(CurrentLevel - 1, 20);
+      GoldForSuccessfulLevelFinish.Insert(CurrentLevel - 1, 40);
       //CurrentLevel = LevelsConfig.Count;//установили созданный уровень текущим
       //LCurrentNCountLevel.Text = "Level " + CurrentLevel.ToString() + "/" + CurrentLevel.ToString();
       LCurrentNCountLevel.Text = "Level: " + CurrentLevel.ToString() + "/" + LevelsConfig.Count.ToString();
@@ -349,6 +358,7 @@ namespace GameEditor
     {
       LevelsConfig.RemoveAt(CurrentLevel - 1);
       NumberOfMonstersAtLevel.RemoveAt(CurrentLevel - 1);
+      GoldForSuccessfulLevelFinish.RemoveAt(CurrentLevel - 1);
       BNewGameConfig.Tag = 1;
       if (LevelsConfig.Count == 0)//Если число уровней равно нулю
       {
@@ -432,9 +442,18 @@ namespace GameEditor
           CheckInput(mTBArmor.Text, Tmp.Armor, out Tmp.Armor);
           break;
         case "mTBNumberOfMonstersAtLevel":
-          int TmpInt = NumberOfMonstersAtLevel[CurrentLevel - 1];
-          CheckInput(mTBNumberOfMonstersAtLevel.Text, TmpInt, out TmpInt);
-          NumberOfMonstersAtLevel[CurrentLevel - 1] = TmpInt;
+          {
+            int TmpInt = NumberOfMonstersAtLevel[CurrentLevel - 1];
+            CheckInput(mTBNumberOfMonstersAtLevel.Text, TmpInt, out TmpInt);
+            NumberOfMonstersAtLevel[CurrentLevel - 1] = TmpInt;
+          }
+          break;
+        case "mTBGoldForSuccessfulLevelFinish":
+          {
+            int TmpInt = GoldForSuccessfulLevelFinish[CurrentLevel - 1];
+            CheckInput(mTBGoldForSuccessfulLevelFinish.Text, TmpInt, out TmpInt);
+            GoldForSuccessfulLevelFinish[CurrentLevel - 1] = TmpInt;
+          }
           break;
       }
       LevelsConfig[CurrentLevel - 1] = Tmp;

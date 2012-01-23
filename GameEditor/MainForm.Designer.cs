@@ -68,6 +68,12 @@
       this.LTowerPath = new System.Windows.Forms.Label();
       this.TBTowerFolder = new System.Windows.Forms.TextBox();
       this.SDForSaveConfiguration = new System.Windows.Forms.SaveFileDialog();
+      this.LGoldAtStart = new System.Windows.Forms.Label();
+      this.LNumberOfLives = new System.Windows.Forms.Label();
+      this.mTBGoldAtStart = new System.Windows.Forms.MaskedTextBox();
+      this.mTBNumberOfLives = new System.Windows.Forms.MaskedTextBox();
+      this.LGoldForSuccessfulLevelFinish = new System.Windows.Forms.Label();
+      this.mTBGoldForSuccessfulLevelFinish = new System.Windows.Forms.MaskedTextBox();
       this.PMapPictBox.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PBMap)).BeginInit();
       this.GBMapManage.SuspendLayout();
@@ -105,7 +111,7 @@
       // 
       this.PBMap.Location = new System.Drawing.Point(3, 3);
       this.PBMap.Name = "PBMap";
-      this.PBMap.Size = new System.Drawing.Size(470, 167);
+      this.PBMap.Size = new System.Drawing.Size(467, 167);
       this.PBMap.TabIndex = 0;
       this.PBMap.TabStop = false;
       // 
@@ -166,6 +172,8 @@
       // 
       // GBLevelConfig
       // 
+      this.GBLevelConfig.Controls.Add(this.mTBGoldForSuccessfulLevelFinish);
+      this.GBLevelConfig.Controls.Add(this.LGoldForSuccessfulLevelFinish);
       this.GBLevelConfig.Controls.Add(this.CBLevelInvisible);
       this.GBLevelConfig.Controls.Add(this.GBNumberOfDirections);
       this.GBLevelConfig.Controls.Add(this.LNumberOfMonstersAtLvl);
@@ -191,18 +199,17 @@
       this.GBLevelConfig.Enabled = false;
       this.GBLevelConfig.Location = new System.Drawing.Point(25, 251);
       this.GBLevelConfig.Name = "GBLevelConfig";
-      this.GBLevelConfig.Size = new System.Drawing.Size(1127, 294);
+      this.GBLevelConfig.Size = new System.Drawing.Size(1127, 332);
       this.GBLevelConfig.TabIndex = 10;
       this.GBLevelConfig.TabStop = false;
       this.GBLevelConfig.Text = "Level configuration";
       // 
       // CBLevelInvisible
       // 
-      this.CBLevelInvisible.AutoSize = true;
       this.CBLevelInvisible.Enabled = false;
-      this.CBLevelInvisible.Location = new System.Drawing.Point(830, 199);
+      this.CBLevelInvisible.Location = new System.Drawing.Point(459, 247);
       this.CBLevelInvisible.Name = "CBLevelInvisible";
-      this.CBLevelInvisible.Size = new System.Drawing.Size(89, 17);
+      this.CBLevelInvisible.Size = new System.Drawing.Size(142, 25);
       this.CBLevelInvisible.TabIndex = 22;
       this.CBLevelInvisible.Text = "Invisible level";
       this.CBLevelInvisible.UseVisualStyleBackColor = true;
@@ -224,10 +231,9 @@
       // 
       // RBAllFourDirections
       // 
-      this.RBAllFourDirections.AutoSize = true;
-      this.RBAllFourDirections.Location = new System.Drawing.Point(6, 130);
+      this.RBAllFourDirections.Location = new System.Drawing.Point(6, 121);
       this.RBAllFourDirections.Name = "RBAllFourDirections";
-      this.RBAllFourDirections.Size = new System.Drawing.Size(105, 17);
+      this.RBAllFourDirections.Size = new System.Drawing.Size(177, 25);
       this.RBAllFourDirections.TabIndex = 2;
       this.RBAllFourDirections.Text = "All four directions";
       this.RBAllFourDirections.UseVisualStyleBackColor = true;
@@ -235,10 +241,9 @@
       // 
       // RBLetfAndUpDirections
       // 
-      this.RBLetfAndUpDirections.AutoSize = true;
-      this.RBLetfAndUpDirections.Location = new System.Drawing.Point(6, 93);
+      this.RBLetfAndUpDirections.Location = new System.Drawing.Point(6, 84);
       this.RBLetfAndUpDirections.Name = "RBLetfAndUpDirections";
-      this.RBLetfAndUpDirections.Size = new System.Drawing.Size(129, 17);
+      this.RBLetfAndUpDirections.Size = new System.Drawing.Size(129, 31);
       this.RBLetfAndUpDirections.TabIndex = 1;
       this.RBLetfAndUpDirections.Text = "Left and Up directions";
       this.RBLetfAndUpDirections.UseVisualStyleBackColor = true;
@@ -246,11 +251,10 @@
       // 
       // RBLeftDirection
       // 
-      this.RBLeftDirection.AutoSize = true;
       this.RBLeftDirection.Checked = true;
-      this.RBLeftDirection.Location = new System.Drawing.Point(6, 59);
+      this.RBLeftDirection.Location = new System.Drawing.Point(6, 52);
       this.RBLeftDirection.Name = "RBLeftDirection";
-      this.RBLeftDirection.Size = new System.Drawing.Size(108, 17);
+      this.RBLeftDirection.Size = new System.Drawing.Size(108, 26);
       this.RBLeftDirection.TabIndex = 0;
       this.RBLeftDirection.TabStop = true;
       this.RBLeftDirection.Text = "Left direction only";
@@ -273,6 +277,7 @@
       this.mTBNumberOfMonstersAtLevel.Name = "mTBNumberOfMonstersAtLevel";
       this.mTBNumberOfMonstersAtLevel.Size = new System.Drawing.Size(100, 29);
       this.mTBNumberOfMonstersAtLevel.TabIndex = 19;
+      this.mTBNumberOfMonstersAtLevel.Text = "20";
       this.mTBNumberOfMonstersAtLevel.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
       // 
       // mTBArmor
@@ -297,7 +302,7 @@
       // BPrevLevel
       // 
       this.BPrevLevel.Enabled = false;
-      this.BPrevLevel.Location = new System.Drawing.Point(109, 255);
+      this.BPrevLevel.Location = new System.Drawing.Point(339, 296);
       this.BPrevLevel.Name = "BPrevLevel";
       this.BPrevLevel.Size = new System.Drawing.Size(136, 30);
       this.BPrevLevel.TabIndex = 16;
@@ -308,7 +313,7 @@
       // BNextLevel
       // 
       this.BNextLevel.Enabled = false;
-      this.BNextLevel.Location = new System.Drawing.Point(255, 255);
+      this.BNextLevel.Location = new System.Drawing.Point(481, 296);
       this.BNextLevel.Name = "BNextLevel";
       this.BNextLevel.Size = new System.Drawing.Size(120, 30);
       this.BNextLevel.TabIndex = 15;
@@ -411,7 +416,7 @@
       // BLoadMonsterPict
       // 
       this.BLoadMonsterPict.Enabled = false;
-      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 255);
+      this.BLoadMonsterPict.Location = new System.Drawing.Point(381, 195);
       this.BLoadMonsterPict.Name = "BLoadMonsterPict";
       this.BLoadMonsterPict.Size = new System.Drawing.Size(220, 30);
       this.BLoadMonsterPict.TabIndex = 7;
@@ -421,7 +426,7 @@
       // 
       // mTBNumberOfPhases
       // 
-      this.mTBNumberOfPhases.Location = new System.Drawing.Point(501, 59);
+      this.mTBNumberOfPhases.Location = new System.Drawing.Point(724, 29);
       this.mTBNumberOfPhases.Mask = "00000";
       this.mTBNumberOfPhases.Name = "mTBNumberOfPhases";
       this.mTBNumberOfPhases.Size = new System.Drawing.Size(100, 29);
@@ -439,7 +444,7 @@
             "Right",
             "Down",
             "Left"});
-      this.LBDirectionSelect.Location = new System.Drawing.Point(481, 149);
+      this.LBDirectionSelect.Location = new System.Drawing.Point(484, 89);
       this.LBDirectionSelect.Name = "LBDirectionSelect";
       this.LBDirectionSelect.Size = new System.Drawing.Size(120, 100);
       this.LBDirectionSelect.TabIndex = 5;
@@ -448,7 +453,7 @@
       // LMonsterSelect
       // 
       this.LMonsterSelect.AutoSize = true;
-      this.LMonsterSelect.Location = new System.Drawing.Point(384, 125);
+      this.LMonsterSelect.Location = new System.Drawing.Point(387, 62);
       this.LMonsterSelect.Name = "LMonsterSelect";
       this.LMonsterSelect.Size = new System.Drawing.Size(217, 24);
       this.LMonsterSelect.TabIndex = 4;
@@ -457,7 +462,7 @@
       // LNumberOfPhases
       // 
       this.LNumberOfPhases.AutoSize = true;
-      this.LNumberOfPhases.Location = new System.Drawing.Point(372, 32);
+      this.LNumberOfPhases.Location = new System.Drawing.Point(486, 32);
       this.LNumberOfPhases.Name = "LNumberOfPhases";
       this.LNumberOfPhases.Size = new System.Drawing.Size(232, 24);
       this.LNumberOfPhases.TabIndex = 2;
@@ -467,7 +472,7 @@
       // 
       this.PMonsterPict.AutoScroll = true;
       this.PMonsterPict.Controls.Add(this.PBMosterPict);
-      this.PMonsterPict.Location = new System.Drawing.Point(607, 25);
+      this.PMonsterPict.Location = new System.Drawing.Point(607, 59);
       this.PMonsterPict.Name = "PMonsterPict";
       this.PMonsterPict.Size = new System.Drawing.Size(217, 260);
       this.PMonsterPict.TabIndex = 0;
@@ -513,11 +518,72 @@
       this.SDForSaveConfiguration.FileName = "*.tdgc";
       this.SDForSaveConfiguration.Filter = "Файлы конфигруации игры|*.tdgc";
       // 
+      // LGoldAtStart
+      // 
+      this.LGoldAtStart.AutoSize = true;
+      this.LGoldAtStart.Location = new System.Drawing.Point(12, 165);
+      this.LGoldAtStart.Name = "LGoldAtStart";
+      this.LGoldAtStart.Size = new System.Drawing.Size(107, 24);
+      this.LGoldAtStart.TabIndex = 16;
+      this.LGoldAtStart.Text = "Gold at start";
+      // 
+      // LNumberOfLives
+      // 
+      this.LNumberOfLives.AutoSize = true;
+      this.LNumberOfLives.Location = new System.Drawing.Point(12, 128);
+      this.LNumberOfLives.Name = "LNumberOfLives";
+      this.LNumberOfLives.Size = new System.Drawing.Size(141, 24);
+      this.LNumberOfLives.TabIndex = 17;
+      this.LNumberOfLives.Text = "Number of lives";
+      // 
+      // mTBGoldAtStart
+      // 
+      this.mTBGoldAtStart.Location = new System.Drawing.Point(150, 160);
+      this.mTBGoldAtStart.Mask = "00000";
+      this.mTBGoldAtStart.Name = "mTBGoldAtStart";
+      this.mTBGoldAtStart.Size = new System.Drawing.Size(100, 29);
+      this.mTBGoldAtStart.TabIndex = 18;
+      this.mTBGoldAtStart.Text = "40";
+      this.mTBGoldAtStart.ValidatingType = typeof(int);
+      // 
+      // mTBNumberOfLives
+      // 
+      this.mTBNumberOfLives.Location = new System.Drawing.Point(150, 125);
+      this.mTBNumberOfLives.Mask = "000";
+      this.mTBNumberOfLives.Name = "mTBNumberOfLives";
+      this.mTBNumberOfLives.Size = new System.Drawing.Size(100, 29);
+      this.mTBNumberOfLives.TabIndex = 19;
+      this.mTBNumberOfLives.Text = "20";
+      // 
+      // LGoldForSuccessfulLevelFinish
+      // 
+      this.LGoldForSuccessfulLevelFinish.AutoSize = true;
+      this.LGoldForSuccessfulLevelFinish.Location = new System.Drawing.Point(6, 250);
+      this.LGoldForSuccessfulLevelFinish.Name = "LGoldForSuccessfulLevelFinish";
+      this.LGoldForSuccessfulLevelFinish.Size = new System.Drawing.Size(261, 24);
+      this.LGoldForSuccessfulLevelFinish.TabIndex = 23;
+      this.LGoldForSuccessfulLevelFinish.Text = "Gold for successful level finish";
+      // 
+      // mTBGoldForSuccessfulLevelFinish
+      // 
+      this.mTBGoldForSuccessfulLevelFinish.Location = new System.Drawing.Point(273, 247);
+      this.mTBGoldForSuccessfulLevelFinish.Mask = "00000";
+      this.mTBGoldForSuccessfulLevelFinish.Name = "mTBGoldForSuccessfulLevelFinish";
+      this.mTBGoldForSuccessfulLevelFinish.Size = new System.Drawing.Size(100, 29);
+      this.mTBGoldForSuccessfulLevelFinish.TabIndex = 24;
+      this.mTBGoldForSuccessfulLevelFinish.Text = "40";
+      this.mTBGoldForSuccessfulLevelFinish.ValidatingType = typeof(int);
+      this.mTBGoldForSuccessfulLevelFinish.TextChanged += new System.EventHandler(this.maskedTextBoxChanged);
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1174, 557);
+      this.ClientSize = new System.Drawing.Size(1174, 595);
+      this.Controls.Add(this.mTBNumberOfLives);
+      this.Controls.Add(this.mTBGoldAtStart);
+      this.Controls.Add(this.LNumberOfLives);
+      this.Controls.Add(this.LGoldAtStart);
       this.Controls.Add(this.TBTowerFolder);
       this.Controls.Add(this.LTowerPath);
       this.Controls.Add(this.LCurrentNCountLevel);
@@ -540,7 +606,6 @@
       this.GBLevelConfig.ResumeLayout(false);
       this.GBLevelConfig.PerformLayout();
       this.GBNumberOfDirections.ResumeLayout(false);
-      this.GBNumberOfDirections.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.nUDCanvaSpeed)).EndInit();
       this.PMonsterPict.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PBMosterPict)).EndInit();
@@ -591,6 +656,12 @@
     private System.Windows.Forms.RadioButton RBLetfAndUpDirections;
     private System.Windows.Forms.RadioButton RBLeftDirection;
     private System.Windows.Forms.CheckBox CBLevelInvisible;
+    private System.Windows.Forms.Label LGoldAtStart;
+    private System.Windows.Forms.Label LNumberOfLives;
+    private System.Windows.Forms.MaskedTextBox mTBGoldAtStart;
+    private System.Windows.Forms.MaskedTextBox mTBNumberOfLives;
+    private System.Windows.Forms.Label LGoldForSuccessfulLevelFinish;
+    private System.Windows.Forms.MaskedTextBox mTBGoldForSuccessfulLevelFinish;
   }
 }
 
