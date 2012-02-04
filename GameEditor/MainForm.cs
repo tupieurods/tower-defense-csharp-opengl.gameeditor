@@ -229,7 +229,7 @@ namespace GameEditor
         {
           BinaryReader LoadMainConf = new BinaryReader(new FileStream(ODForFileSelect.FileName, FileMode.Open, FileAccess.Read));
           object[] Tmp;
-          SaveNLoad.LoadMainGameConf(LoadMainConf, ref NumberOfMonstersAtLevel,ref GoldForSuccessfulLevelFinish, out Tmp);
+          SaveNLoad.LoadMainGameConf(LoadMainConf, out NumberOfMonstersAtLevel, out GoldForSuccessfulLevelFinish, out Tmp);
           string MapName = (string)Tmp[0];//0-имя карты
           ShowMapByFileName(MapName);
           TBTowerFolder.Text = (string)Tmp[1];//1-имя папки с описанием башен
