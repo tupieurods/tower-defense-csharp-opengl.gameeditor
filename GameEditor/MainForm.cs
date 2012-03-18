@@ -6,7 +6,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-using GameCoClassLibrary;
+using GameCoClassLibrary.Structures;
+using GameCoClassLibrary.Enums;
+using GameCoClassLibrary.Classes;
+using GameCoClassLibrary.Loaders;
 
 namespace GameEditor
 {
@@ -289,12 +292,12 @@ namespace GameEditor
         string MapNameGetting = ODForFileSelect.FileName.Substring(ODForFileSelect.FileName.LastIndexOf('\\') + 1);
         LMapName.Text = "Map name: " + MapNameGetting.Substring(0, MapNameGetting.IndexOf('.'));
         TMap Map = new TMap(FileName);
-        Bitmap TmpImg = new Bitmap(Convert.ToInt32(Map.Width * 15 * Map.Scaling),
-          Convert.ToInt32(Map.Height * 15 * Map.Scaling));
+        Bitmap TmpImg = new Bitmap(Convert.ToInt32(Map.Width * Settings.ElemSize * Map.Scaling),
+          Convert.ToInt32(Map.Height * Settings.ElemSize * Map.Scaling));
         Graphics Canva = Graphics.FromImage(TmpImg);//создали канву
         Map.ShowOnGraphics(Canva);
-        PBMap.Width = Convert.ToInt32(Map.Width * 15 * Map.Scaling);//Установили размеры
-        PBMap.Height = Convert.ToInt32(Map.Height * 15 * Map.Scaling);
+        PBMap.Width = Convert.ToInt32(Map.Width * Settings.ElemSize * Map.Scaling);//Установили размеры
+        PBMap.Height = Convert.ToInt32(Map.Height * Settings.ElemSize * Map.Scaling);
         PBMap.Image = TmpImg;
       }
       catch
