@@ -114,4 +114,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Game_configuration_not_saved">
+    <value xml:space="preserve">Game configuration not saved! Save game configuration?</value>
+  </data>
+  <data name="Applictaion_Title_InMessages">
+    <value xml:space="preserve">Game configurator</value>
+  </data>
+  <data name="Really_want_new">
+    <value xml:space="preserve">Do you really want create new game configuration?</value>
+  </data>
+  <data name="Save_error">
+    <value xml:space="preserve">File save error:
+</value>
+  </data>
+  <data name="Load_error">
+    <value xml:space="preserve">File load error:
+</value>
+  </data>
 </root>
