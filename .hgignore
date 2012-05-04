@@ -99,3 +99,8 @@ GameEditor/obj/x86/Release/GenerateResource.write.1.tlog
 GameEditor/obj/x86/Release/ResolveAssemblyReference.cache
 GameEditorApp.sln
 GameEditorApp.suo
+_ReSharper.GameEditorApp
+GameEditor/obj
+GameEditorApp.sln.DotSettings.user
+GameEditor/GameEditor.csproj.DotSettings.user
+GameEditor/GameEditor.csproj.DotSettings

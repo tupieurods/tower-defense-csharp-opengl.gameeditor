@@ -20,19 +20,45 @@ namespace GameEditor
   {
     #region delegats
 
-    //Для проверки на соответствие при изменении значений в maskedTextBox'ах
+    /// <summary>
+    /// Parses inValue string and sets to checkResult if inValue valid
+    /// </summary>
+    /// <param name="inValue">Value to set.</param>
+    /// <param name="valueBeforeChange">The value before change.</param>
+    /// <param name="checkResult">The check result.</param>
     delegate void Check(string inValue, int valueBeforeChange, out int checkResult);
 
     #endregion
 
+    /// <summary>
+    /// All level configurations
+    /// </summary>
     private List<MonsterParam> _levelsConfig;
+    /// <summary>
+    /// Number of monsters at every level
+    /// </summary>
     private List<int> _numberOfMonstersAtLevel;//Число монстров на каждлм из уровней
+    /// <summary>
+    /// Bonus for successful level finishing
+    /// </summary>
     private List<int> _goldForSuccessfulLevelFinish;//Золото за успешное завершение уровня
+    /// <summary>
+    /// Bonus for monster killing at every level
+    /// </summary>
     private List<int> _goldForKillMonster;
+    /// <summary>
+    /// Current level(in configurator)
+    /// </summary>
     private int _currentLevel;//показывает текущий уровень
-    private bool _realChange;//показывает как был изменён текст в maskedTextBox или других элементах редактирования
-    //человеком или программно
+    /// <summary>
+    /// True: Parameter was changed by user, needs saving 
+    /// False: Parametr was changed by program, doesn't need saving 
+    /// </summary>
+    private bool _realChange;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainForm"/> class.
+    /// </summary>
     public MainForm()
     {
       _realChange = false;
@@ -43,7 +69,10 @@ namespace GameEditor
     }
 
     #region Установление новых настроек по умолчанию для нового уровня/игровой конфигурации
-    private void DefualtForNewLevel()//Заполнение параметров при добавлении уровня
+    /// <summary>
+    /// Sets all parameter of level to default, when new level adding
+    /// </summary>
+    private void DefaultForNewLevel()
     {
       _realChange = false;
       // ReSharper disable LocalizableElement
@@ -60,9 +89,12 @@ namespace GameEditor
       _realChange = true;
     }
 
-    private void SetDefault()//Default для новой конфигурации игры
+    /// <summary>
+    /// Sets all parameter of game to default, when new game creating
+    /// </summary>
+    private void SetDefault()
     {
-      DefualtForNewLevel();//Для нового уровня
+      DefaultForNewLevel();
       // ReSharper disable LocalizableElement
       LCurrentNCountLevel.Text = "Level: 0/0";
       TBTowerFolder.Text = "Demo";
@@ -75,6 +107,9 @@ namespace GameEditor
       _goldForKillMonster = new List<int>();
     }
 
+    /// <summary>
+    /// Creating a new configuration of the game and setting all the settings
+    /// </summary>
     private void CreateNewConfiguration()
     {
       BNewGameConfig.Tag = 1;
@@ -89,13 +124,18 @@ namespace GameEditor
       _currentLevel = 0;
       PBMap.Image = null;
       PBMap.Size = new Size(10, 10);
+      LMapName.Text = "Map name:";
       SetDefault();
       BSave.Enabled = true;
       _realChange = true;
     }
     #endregion
 
-    private void ShowLevelSettings(int levelNum)//Показ состояния настроек уровня
+    /// <summary>
+    /// Shows the level settings.
+    /// </summary>
+    /// <param name="levelNum">Number of the level.</param>
+    private void ShowLevelSettings(int levelNum)
     {
       if (_levelsConfig.Count < levelNum)
         return;
@@ -109,7 +149,7 @@ namespace GameEditor
       mTBGoldForSuccessfulLevelFinish.Text = _goldForSuccessfulLevelFinish[levelNum - 1].ToString(CultureInfo.InvariantCulture);
       CBLevelInvisible.Checked = _levelsConfig[levelNum - 1].Base.Invisible;
       LCurrentNCountLevel.Text = "Level: " + levelNum.ToString(CultureInfo.InvariantCulture) + "/" + _levelsConfig.Count.ToString(CultureInfo.InvariantCulture);
-      //Вывод картинки
+      //Monster picture
       MonsterParam tmp = _levelsConfig[levelNum - 1];
       if (tmp[MonsterDirection.Left, 0] != null)
         DrawMonsterPhases(MonsterDirection.Left);
@@ -133,7 +173,12 @@ namespace GameEditor
       _realChange = true;
     }
 
-    private void BNewGameConfig_Click(object sender, EventArgs e)//Создание новой игры
+    /// <summary>
+    /// User clicked to button create New game configuration
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void BNewGameConfig_Click(object sender, EventArgs e)
     {
       if (Convert.ToInt32(BNewGameConfig.Tag) == 0)
       {
@@ -143,8 +188,8 @@ namespace GameEditor
       if (Convert.ToInt32(BNewGameConfig.Tag) == 1)
       {
         if (MessageBox.Show(Resources.Game_configuration_not_saved, Resources.Applictaion_Title_InMessages, MessageBoxButtons.YesNo) == DialogResult.Yes)
-        //Ещё не сохраняли после изменений
-        {//Если хотим сохранять сохраняем
+        //If needs to save
+        {//If user want to save current game configuration, before he create new one
           BSave_Click(sender, e);
           return;
         }
@@ -158,10 +203,15 @@ namespace GameEditor
     }
 
     #region Save/Load
-    private void BSave_Click(object sender, EventArgs e)//Сохранение конфигурации игры
+    /// <summary>
+    /// User clicked to button Save game configuration
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void BSave_Click(object sender, EventArgs e)
     {
       if (SDForSaveConfiguration.ShowDialog() != DialogResult.OK) return;
-      try
+      try//Saving main configuration
       {
         BinaryWriter saveMainConf = new BinaryWriter(new FileStream(SDForSaveConfiguration.FileName, FileMode.Create, FileAccess.Write));
         int tmp1 = 40;
@@ -180,7 +230,7 @@ namespace GameEditor
       string filePath = SDForSaveConfiguration.FileName.Substring(0, SDForSaveConfiguration.FileName.LastIndexOf('\\') + 1);
       string fileName = SDForSaveConfiguration.FileName.Substring(SDForSaveConfiguration.FileName.LastIndexOf('\\') + 1);
       fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
-      try
+      try//Saving configurations of levels
       {
         FileStream levelConfSaveStream = new FileStream(filePath + fileName + ".tdlc", FileMode.Create, FileAccess.Write);
         IFormatter formatter = new BinaryFormatter();
@@ -196,9 +246,14 @@ namespace GameEditor
       BNewGameConfig.Tag = 2;
     }
 
+    /// <summary>
+    /// User clicked to button Load game configuration
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void BLoad_Click(object sender, EventArgs e)
     {
-      ODForFileSelect.Filter = "Файл с конфигурацией игры|*.tdgc";
+      ODForFileSelect.Filter = "File with game configuration|*.tdgc";
       ODForFileSelect.FileName = "*.tdgc";
       if (ODForFileSelect.ShowDialog() == DialogResult.OK)
       {
@@ -208,17 +263,20 @@ namespace GameEditor
           return;
         }
         int levelsCount;
-        try
+        try//Loading main configuration
         {
           BinaryReader loadMainConf = new BinaryReader(new FileStream(ODForFileSelect.FileName, FileMode.Open, FileAccess.Read));
           object[] tmp;
           SaveNLoad.LoadMainGameConf(loadMainConf, out _numberOfMonstersAtLevel, out _goldForSuccessfulLevelFinish, out _goldForKillMonster, out tmp);
-          string mapName = (string)tmp[0];//0-имя карты
-          ShowMapByFileName(mapName);
-          TBTowerFolder.Text = (string)tmp[1];//1-имя папки с описанием башен
-          levelsCount = (int)tmp[2];//2-число уровней
-          mTBGoldAtStart.Text = Convert.ToInt32(tmp[4]).ToString(CultureInfo.InvariantCulture);//4-золото при старте
-          mTBNumberOfLives.Text = Convert.ToInt32(tmp[5]).ToString(CultureInfo.InvariantCulture);//5-Число жизней в начале
+          string mapName = (string)tmp[0];//0-Map name
+          if (!ShowMapByFileName(mapName))//If map file doesn't exists at path from configuration file, try to get it from folder with configuration
+          {
+            ShowMapByFileName(ODForFileSelect.FileName.Substring(0, ODForFileSelect.FileName.LastIndexOf("\\", StringComparison.Ordinal) + 1) + mapName.Substring(mapName.LastIndexOf("\\", StringComparison.Ordinal)));
+          }
+          TBTowerFolder.Text = (string)tmp[1];//1-Nam of the folder with towers configurations
+          levelsCount = (int)tmp[2];//2-Number of levels
+          mTBGoldAtStart.Text = Convert.ToInt32(tmp[4]).ToString(CultureInfo.InvariantCulture);//4-Money
+          mTBNumberOfLives.Text = Convert.ToInt32(tmp[5]).ToString(CultureInfo.InvariantCulture);//5-Lives
           loadMainConf.Close();
         }
         catch (Exception exc)
@@ -226,7 +284,7 @@ namespace GameEditor
           MessageBox.Show(Resources.Load_error + exc.Message);
           return;
         }
-        try
+        try//Loading configurations of levels
         {
           string levelFileName = ODForFileSelect.FileName.Substring(0, ODForFileSelect.FileName.LastIndexOf('.')) + ".tdlc";
           FileStream levelLoadStream = new FileStream(levelFileName, FileMode.Open, FileAccess.Read);
@@ -234,7 +292,7 @@ namespace GameEditor
           _levelsConfig.Clear();
           for (int i = 0; i < levelsCount; i++)
             _levelsConfig.Add((MonsterParam)(formatter.Deserialize(levelLoadStream)));
-          levelLoadStream.Close();
+          levelLoadStream.Close();//All loaded, stream closing
           _currentLevel = 1;
           ShowLevelSettings(1);
           BRemoveLevel.Enabled = true;
@@ -264,45 +322,56 @@ namespace GameEditor
     }
     #endregion
 
-    #region Загрузка и показ изображения карты
-    private void BSelectMap_Click(object sender, EventArgs e)//Выбор карты
+    #region Map selection and loading
+    /// <summary>
+    /// Map file selection
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void BSelectMap_Click(object sender, EventArgs e)
     {
-      ODForFileSelect.Filter = "Файл с конфигурацией карты|*.efm";
+      ODForFileSelect.Filter = "File with map configuration|*.efm";
       if (ODForFileSelect.ShowDialog() != DialogResult.OK) return;
-      if (!ShowMapByFileName(ODForFileSelect.FileName)) return;
-      /*PBMap.Tag = ODForFileSelect.FileName;
-      BNewGameConfig.Tag = 1;*/
-      /* Для чего задаётся полный путь к файлу.
-          * Для удобства разработчика. При запуске игры, а не конфигуратора, 
-          * будет извлечено имя карты и она будет загружена из каталога data,
-           * При запуске же конфигуратора отпадает необходимость каждый раз закидывать карту в каталог с редактором
-           */
+      ShowMapByFileName(ODForFileSelect.FileName);
+      //if (!ShowMapByFileName(ODForFileSelect.FileName)) return;
+      /*
+       *Used full name path
+       *This is done for convenience.
+       *When you start the game, map name will be parsed form this string
+       *When you start the game editor, you don't need copy the map into folder with the game configurator
+       */
     }
 
+    /// <summary>
+    /// Shows the map from map configuration file
+    /// </summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <returns>true if map loaded successfully</returns>
     private bool ShowMapByFileName(string fileName)
     {
       try
       {
         if (fileName == string.Empty)
-          return false;
+          throw new ArgumentNullException("fileName");
         PBMap.Image = null;
-        PBMap.Size=new Size(0,0);
+        PBMap.Size = new Size(0, 0);
         string mapNameGetting = fileName.Substring(fileName.LastIndexOf('\\') + 1);
         LMapName.Text = string.Format("Map name: {0}", mapNameGetting.Substring(0, mapNameGetting.IndexOf('.')));
-        TMap map = new TMap(fileName);
+        Map map = new Map(fileName);
         Bitmap tmpImg = new Bitmap(Convert.ToInt32(map.Width * Settings.ElemSize * map.Scaling),
           Convert.ToInt32(map.Height * Settings.ElemSize * map.Scaling));
-        Graphics canva = Graphics.FromImage(tmpImg);//создали канву
+        Graphics canva = Graphics.FromImage(tmpImg);//canva
         map.ShowOnGraphics(canva);
-        PBMap.Width = Convert.ToInt32(map.Width * Settings.ElemSize * map.Scaling);//Установили размеры
+        PBMap.Width = Convert.ToInt32(map.Width * Settings.ElemSize * map.Scaling);//sizes setting
         PBMap.Height = Convert.ToInt32(map.Height * Settings.ElemSize * map.Scaling);
         PBMap.Image = tmpImg;
         PBMap.Tag = fileName;
         BNewGameConfig.Tag = 1;
       }
-      catch
+      catch (Exception e)
       {
-        MessageBox.Show("Map loading error");
+        MessageBox.Show("Map loading error" + e.Message);
         return false;
       }
       MessageBox.Show("Map loaded Successful");
@@ -310,8 +379,13 @@ namespace GameEditor
     }
     #endregion
 
-    #region Добавление и удаление уровней
-    private void BAddLevel_Click(object sender, EventArgs e)//Добавление уровня
+    #region Adding and removing levels
+    /// <summary>
+    /// New level adding
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void BAddLevel_Click(object sender, EventArgs e)
     {
       MonsterParam tmp = new MonsterParam(1, 100, 1, 1, "", 1);
       _levelsConfig.Insert(_currentLevel++, tmp);
@@ -319,30 +393,35 @@ namespace GameEditor
       _goldForSuccessfulLevelFinish.Insert(_currentLevel - 1, 40);
       _goldForKillMonster.Insert(_currentLevel - 1, 10);
       LCurrentNCountLevel.Text = "Level: " + _currentLevel.ToString(CultureInfo.InvariantCulture) + "/" + _levelsConfig.Count.ToString(CultureInfo.InvariantCulture);
-      if (_levelsConfig.Count == 2)//Если число уровней больше двух и нужно реализовать переключение между ними
+      if (_levelsConfig.Count == 2)//If number of levels>1, user needs to switch between them
       {
         BNextLevel.Enabled = true;
         BPrevLevel.Enabled = true;
       }
       if (_levelsConfig.Count == 1)
       {
-        BLoadMonsterPict.Enabled = true;//разрешить добавление картинки
+        BLoadMonsterPict.Enabled = true;//User can add monster picture
         GBNumberOfDirections.Enabled = true;
         CBLevelInvisible.Enabled = true;
       }
-      DefualtForNewLevel();//установить шаблон
+      DefaultForNewLevel();//Set a level template
       BRemoveLevel.Enabled = true;
       BNewGameConfig.Tag = 1;
     }
 
-    private void BRemoveLevel_Click(object sender, EventArgs e)//Удаление уровня
+    /// <summary>
+    /// Level removing
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void BRemoveLevel_Click(object sender, EventArgs e)
     {
       _levelsConfig.RemoveAt(_currentLevel - 1);
       _numberOfMonstersAtLevel.RemoveAt(_currentLevel - 1);
       _goldForSuccessfulLevelFinish.RemoveAt(_currentLevel - 1);
       _goldForKillMonster.RemoveAt(_currentLevel - 1);
       BNewGameConfig.Tag = 1;
-      if (_levelsConfig.Count == 0)//Если число уровней равно нулю
+      if (_levelsConfig.Count == 0)//There are no levels, no settings
       {
         BLoadMonsterPict.Enabled = false;
         GBNumberOfDirections.Enabled = false;
@@ -352,7 +431,7 @@ namespace GameEditor
       }
       else
       {
-        if (_levelsConfig.Count == 1)//Если число уровней равное единице
+        if (_levelsConfig.Count == 1)//If number of levels==1, usen doesn't need to switch beetwen them
         {
           BNextLevel.Enabled = false;
           BPrevLevel.Enabled = false;
@@ -366,44 +445,53 @@ namespace GameEditor
         }
         ShowLevelSettings(_currentLevel);
       }
-      //LCurrentNCountLevel.Text = "Level " + CurrentLevel.ToString() + "/" + LevelsConfig.Count.ToString();
     }
     #endregion
 
-    #region переключение уровней
+    #region Switching levels
+    /// <summary>
+    /// User want to get next level
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void BNextLevel_Click(object sender, EventArgs e)
     {
       _currentLevel++;
       if (_currentLevel > _levelsConfig.Count)
         _currentLevel = 1;
       ShowLevelSettings(_currentLevel);
-      //LCurrentNCountLevel.Text = "Level " + CurrentLevel.ToString() + "/" + LevelsConfig.Count.ToString();
     }
 
+    /// <summary>
+    /// User want to get previous level.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void BPrevLevel_Click(object sender, EventArgs e)
     {
       _currentLevel--;
       if (_currentLevel <= 0)
         _currentLevel = _levelsConfig.Count;
       ShowLevelSettings(_currentLevel);
-      //LCurrentNCountLevel.Text = "Level " + CurrentLevel.ToString() + "/" + LevelsConfig.Count.ToString();
     }
     #endregion
 
-    #region Изменение текста в mTB задающих параметры
+    #region Setting settings by user
 
+    /// <summary>
+    /// Masked text box changed.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void maskedTextBoxChanged(object sender, EventArgs e)
     {
-      using (var maskedTextBox = sender as MaskedTextBox)
-      {
-        if (maskedTextBox != null && ((_currentLevel <= 0) || (maskedTextBox.Text == string.Empty) || (!_realChange)))
-          return;
-      }
       if ((sender as MaskedTextBox) == null)
       {
-        MessageBox.Show("BAD BAD BAD programmer! Used metod incorrect. KILL HIM");
+        MessageBox.Show("BAD BAD BAD programmer! The method is used incorrectly");
         return;
       }
+      if (_currentLevel <= 0 || ((sender as MaskedTextBox).Text == string.Empty) || (!_realChange))
+        return;
       Check checkInput = (string inValue, int valueBeforeChange, out int checkResult) =>
       {
         checkResult = Convert.ToInt32(inValue.Replace(" ", string.Empty)) == 0 ?
@@ -451,6 +539,11 @@ namespace GameEditor
       BNewGameConfig.Tag = 1;
     }
 
+    /// <summary>
+    /// Canva speed setting validation
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void nUDCanvaSpeed_Validated(object sender, EventArgs e)
     {
       if ((_currentLevel <= 0) || (!_realChange))
@@ -461,6 +554,11 @@ namespace GameEditor
       BNewGameConfig.Tag = 1;
     }
 
+    /// <summary>
+    /// Change setting of invisibility
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void CBLevelInvisible_CheckedChanged(object sender, EventArgs e)
     {
       if ((_currentLevel <= 0) || (!_realChange))
@@ -472,7 +570,11 @@ namespace GameEditor
     }
     #endregion
 
-    #region Загрузка/Отрисовка изображения монстра
+    #region Monster loading and rendering
+    /// <summary>
+    /// Draws the monster phases.
+    /// </summary>
+    /// <param name="direction">The direction.</param>
     private void DrawMonsterPhases(MonsterDirection direction)
     {
       MonsterParam tmp = _levelsConfig[_currentLevel - 1];
@@ -487,7 +589,7 @@ namespace GameEditor
         for (int phaseNum = 0; phaseNum < tmp.NumberOfPhases; phaseNum++)
         {
           canva.DrawImage(tmp[direction, phaseNum], (PBMosterPict.Width / 2) - (tmp[direction, phaseNum].Width / 2), (phaseNum * tmp[direction, phaseNum].Height + 20 * phaseNum),
-            tmp[direction, phaseNum].Width, tmp[direction, phaseNum].Height);//Приходится указывать размеры, т.к без них происходит прорисовка в дюймах
+            tmp[direction, phaseNum].Width, tmp[direction, phaseNum].Height);
         }
         PBMosterPict.Image = tmpForDrawing;
         PMonsterPict.Refresh();
@@ -499,9 +601,14 @@ namespace GameEditor
       }
     }
 
+    /// <summary>
+    /// Monster picture loading
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void BLoadMonsterPict_Click(object sender, EventArgs e)
     {
-      ODForFileSelect.Filter = "Файл с изображением монстра|*.bmp";
+      ODForFileSelect.Filter = "Monster picture|*.bmp";
       ODForFileSelect.FileName = "*.bmp";
       if (ODForFileSelect.ShowDialog() == DialogResult.OK)
       {
@@ -523,27 +630,41 @@ namespace GameEditor
       }
     }
 
+    /// <summary>
+    /// User changed monster direction(previewing, how picture will be parsed)
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
     private void LBDirectionSelect_SelectedIndexChanged(object sender, EventArgs e)
     {
-      //MonsterParam tmp = _levelsConfig[_currentLevel - 1];
       DrawMonsterPhases((MonsterDirection)LBDirectionSelect.SelectedIndex);
     }
     #endregion
 
-    private void TBTowerFolder_KeyPress(object sender, KeyPressEventArgs e)//Чтобы невозможно было символ в имени папки, который запрещён в windows
+    /// <summary>
+    /// Tower folder name validation
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.Windows.Forms.KeyPressEventArgs"/> instance containing the event data.</param>
+    private void TBTowerFolder_KeyPress(object sender, KeyPressEventArgs e)
     {
       const string badSymbols = "\\|/:*?\"<>|";
-      if (badSymbols.IndexOf(e.KeyChar.ToString()) != -1)
+      if (badSymbols.IndexOf(e.KeyChar.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal) != -1)
         e.Handled = true;
       else
         if (_realChange)
           BNewGameConfig.Tag = 1;
     }
 
-    private void RBLeftDirection_CheckedChanged(object sender, EventArgs e)//Изменение числа направлений
+    /// <summary>
+    /// Change the number of directions in the image of monsters
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    private void RBLeftDirection_CheckedChanged(object sender, EventArgs e)
     {
-      if (Convert.ToInt32(GBNumberOfDirections.Tag) == 0)//Т.к это один обработчик для всех RadioButton
-      //определяющих число направлений, чтобы не проводилось две обработки используется свойство Tag
+      if (Convert.ToInt32(GBNumberOfDirections.Tag) == 0)//One handler for all RadioButtons, 
+      //Therefore, the Tag property is used to prevent double processing
       {
         GBNumberOfDirections.Tag = 1;
       }
@@ -571,6 +692,11 @@ namespace GameEditor
       DrawMonsterPhases(MonsterDirection.Left);
     }
 
+    /// <summary>
+    /// Form closing, checking, may be user want to save game configuration, before game edito will be closed
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.</param>
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
       if (Convert.ToInt32(BNewGameConfig.Tag) != 1) return;
